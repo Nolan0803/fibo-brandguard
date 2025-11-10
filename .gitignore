@@ -13,6 +13,10 @@ dist/
 
 # Audit logs
 audit_log.json
+demo_audit_log.json
+
+# Environment
+.env
 
 # IDE
 .vscode/
