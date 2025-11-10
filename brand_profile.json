@@ -1,0 +1,35 @@
+{
+  "brand_name": "FIBO Demo Brand",
+  "policies": {
+    "allowed_themes": [
+      "professional",
+      "modern",
+      "clean",
+      "innovative",
+      "tech-focused"
+    ],
+    "prohibited_content": [
+      "violence",
+      "inappropriate",
+      "offensive",
+      "political",
+      "controversial"
+    ],
+    "color_preferences": [
+      "blue",
+      "white",
+      "gray",
+      "green"
+    ],
+    "style_guidelines": {
+      "tone": "professional and trustworthy",
+      "avoid": "overly casual or unprofessional imagery",
+      "prefer": "high-quality, well-lit, professional photography"
+    }
+  },
+  "requirements": {
+    "minimum_quality": "high",
+    "brand_consistency": true,
+    "safety_first": true
+  }
+}
