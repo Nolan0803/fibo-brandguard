@@ -20,83 +20,428 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Enterprise styling
+# Modern Marketing-Focused CSS
 st.markdown("""
 <style>
-    .stApp {
-        background-color: #0e1117;
-        color: #fafafa;
+/* Modern App Foundation */
+.main .block-container {
+    padding: 0;
+    max-width: 100%;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    min-height: 100vh;
+}
+
+/* Hero Section Styling */
+.hero-section {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    padding: 4rem 2rem;
+    text-align: center;
+    border-radius: 0 0 32px 32px;
+    margin-bottom: 3rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.hero-logo {
+    max-width: 320px;
+    margin: 0 auto 2rem;
+    filter: drop-shadow(0 8px 16px rgba(59, 130, 246, 0.3));
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+}
+
+.hero-subtitle {
+    font-size: 1.4rem;
+    color: #94a3b8;
+    font-weight: 500;
+    margin-bottom: 2rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+}
+
+.hero-description {
+    font-size: 1.1rem;
+    color: #64748b;
+    max-width: 700px;
+    margin: 0 auto 2rem;
+    line-height: 1.7;
+}
+
+/* Trust Indicators */
+.trust-bar {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    margin: 2rem 0;
+    flex-wrap: wrap;
+}
+
+.trust-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #10b981;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+/* Modern Status Cards */
+.status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin: 3rem 0;
+    padding: 0 2rem;
+}
+
+.status-card {
+    background: rgba(30, 41, 59, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.status-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+    transition: left 0.6s ease;
+}
+
+.status-card:hover::before {
+    left: 100%;
+}
+
+.status-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(59, 130, 246, 0.5);
+    box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2);
+}
+
+.status-card-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #10b981;
+}
+
+.status-card-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin-bottom: 0.5rem;
+}
+
+.status-card-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #3b82f6;
+    margin-bottom: 1rem;
+}
+
+.status-card-desc {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* Modern Form Container */
+.form-container {
+    background: rgba(30, 41, 59, 0.9);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 20px;
+    padding: 3rem;
+    margin: 2rem;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+}
+
+.form-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #f1f5f9;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.form-subtitle {
+    font-size: 1.1rem;
+    color: #94a3b8;
+    text-align: center;
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+}
+
+/* Enhanced Form Controls */
+.stTextArea textarea {
+    background: rgba(15, 23, 42, 0.9) !important;
+    border: 2px solid rgba(59, 130, 246, 0.3) !important;
+    border-radius: 12px !important;
+    color: #f1f5f9 !important;
+    font-size: 1rem !important;
+    padding: 1.25rem !important;
+    transition: all 0.3s ease !important;
+    backdrop-filter: blur(10px) !important;
+}
+
+.stTextArea textarea:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15) !important;
+    background: rgba(15, 23, 42, 1) !important;
+}
+
+.stSelectbox > div > div {
+    background: rgba(15, 23, 42, 0.9) !important;
+    border: 2px solid rgba(59, 130, 246, 0.3) !important;
+    border-radius: 12px !important;
+    transition: all 0.3s ease !important;
+    backdrop-filter: blur(10px) !important;
+}
+
+.stSelectbox > div > div:focus-within {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15) !important;
+}
+
+.stTextInput > div > div {
+    background: rgba(15, 23, 42, 0.9) !important;
+    border: 2px solid rgba(59, 130, 246, 0.3) !important;
+    border-radius: 12px !important;
+    transition: all 0.3s ease !important;
+    backdrop-filter: blur(10px) !important;
+}
+
+.stTextInput > div > div:focus-within {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15) !important;
+}
+
+.stSlider > div > div > div {
+    background: rgba(59, 130, 246, 0.2) !important;
+}
+
+/* Premium Button Design */
+.stButton > button {
+    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #10b981 100%) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 12px !important;
+    padding: 1rem 3rem !important;
+    font-size: 1.1rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    transition: all 0.4s ease !important;
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4) !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.stButton > button:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.6s ease;
+}
+
+.stButton > button:hover:before {
+    left: 100%;
+}
+
+.stButton > button:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 15px 35px rgba(59, 130, 246, 0.6) !important;
+    background: linear-gradient(135deg, #2563eb 0%, #7c3aed 50%, #059669 100%) !important;
+}
+
+/* Modern Status Pills */
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-right: 0.75rem;
+    margin-bottom: 0.75rem;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.status-success {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.9), rgba(5, 150, 105, 0.9));
+    border: 1px solid rgba(16, 185, 129, 0.5);
+    color: white;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.status-warning {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.9), rgba(217, 119, 6, 0.9));
+    border: 1px solid rgba(245, 158, 11, 0.5);
+    color: white;
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+}
+
+.status-error {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.9), rgba(220, 38, 38, 0.9));
+    border: 1px solid rgba(239, 68, 68, 0.5);
+    color: white;
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+}
+
+/* Section Headers */
+.section-header {
+    font-size: 2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.section-subtext {
+    color: #94a3b8;
+    font-size: 1rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+/* Sidebar Modern Design */
+.sidebar-header {
+    color: #f1f5f9;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+    text-align: center;
+}
+
+.sidebar-subheader {
+    color: #10b981;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+/* Modern Image Cards */
+.image-card {
+    background: rgba(30, 41, 59, 0.9);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    transition: all 0.4s ease;
+    overflow: hidden;
+    position: relative;
+}
+
+.image-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.1), transparent);
+    transition: left 0.6s ease;
+}
+
+.image-card:hover::before {
+    left: 100%;
+}
+
+.image-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(16, 185, 129, 0.5);
+    box-shadow: 0 25px 50px rgba(16, 185, 129, 0.2);
+}
+
+.image-caption {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 0.95rem;
+    margin-top: 1rem;
+    font-weight: 500;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+/* Visual Separators */
+.visual-separator {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.5), rgba(16, 185, 129, 0.5), transparent);
+    margin: 3rem 0;
+    border-radius: 2px;
+}
+
+/* Hide Streamlit Elements */
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+header {visibility: hidden;}
+.stDeployButton {visibility: hidden;}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-track {
+    background: rgba(15, 23, 42, 0.5);
+}
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #2563eb, #059669);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem;
     }
-    
-    /* Main content area */
-    .main .block-container {
-        padding-top: 2rem;
-        padding-bottom: 2rem;
+    .hero-subtitle {
+        font-size: 1.2rem;
     }
-    
-    /* Header tagline styling */
-    .header-tagline {
-        color: #9ca3af;
-        font-size: 0.95rem;
-        text-align: center;
-        margin: 0.75rem 0 1.5rem 0;
-        font-weight: 400;
-        letter-spacing: 0.5px;
+    .form-container {
+        margin: 1rem;
+        padding: 2rem;
     }
-    
-    /* Subtle divider */
-    .section-divider {
-        height: 1px;
-        background: linear-gradient(90deg, transparent 0%, #374151 50%, transparent 100%);
-        margin: 2rem 0;
-        opacity: 0.6;
+    .trust-bar {
+        gap: 1.5rem;
     }
-    
-    /* Status pills */
-    .status-pill {
-        display: inline-block;
-        padding: 0.25rem 0.75rem;
-        border-radius: 1rem;
-        font-size: 0.75rem;
-        font-weight: 600;
-        margin: 0.125rem;
-    }
-    
-    .status-success {
-        background-color: #10b981;
-        color: white;
-    }
-    
-    .status-warning {
-        background-color: #d97706;
-        color: white;
-    }
-    
-    .status-error {
-        background-color: #dc2626;
-        color: white;
-    }
-    
-    /* Enhanced metric cards with glow borders */
-    .metric-card {
-        background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
-        padding: 1.75rem;
-        border-radius: 0.875rem;
-        border: 1px solid #3b82f6;
-        box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(59, 130, 246, 0.1);
-        margin-bottom: 1.5rem;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .metric-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
+}
+</style>
+""", unsafe_allow_html=True)
         background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(16, 185, 129, 0.05) 100%);
         opacity: 0;
         transition: opacity 0.3s ease;
@@ -392,13 +737,37 @@ with col2:
         if not logo_displayed:
             # Fallback to professional text header
             st.markdown("""
-            <div style="text-align: center; padding: 2rem 0;">
-                <h1 style="color: #3b82f6; font-size: 3rem; margin: 0; font-weight: 700;">
-                    🛡️ FIBO BrandGuard
-                </h1>
-                <p style="color: #10b981; font-size: 1.2rem; margin: 0.5rem 0 0 0; font-weight: 500;">
-                    Controlled Visuals. Trusted Brands
-                </p>
+            <div class="hero-section">
+                <div style="text-align: center; padding: 1rem 0 2rem;">
+                    <h1 style="color: #3b82f6; font-size: 4rem; margin: 0; font-weight: 800; text-shadow: 0 0 20px rgba(59, 130, 246, 0.3);">
+                        🛡️ FIBO BrandGuard
+                    </h1>
+                    <p style="color: #10b981; font-size: 1.3rem; margin: 0.5rem 0; font-weight: 600; letter-spacing: 1px;">
+                        ENTERPRISE AI GOVERNANCE
+                    </p>
+                </div>
+                <h2 class="hero-title">Transform Creative Vision with Governed AI</h2>
+                <p class="hero-subtitle">Advanced JSON-native prompting with Bria FIBO for enterprises that demand both creativity and compliance</p>
+                <p class="hero-description">Generate stunning, brand-safe visuals while maintaining complete audit transparency. Our enterprise-grade platform ensures every image aligns with your brand guidelines and regulatory requirements.</p>
+                
+                <div class="trust-bar">
+                    <div class="trust-indicator">
+                        <span>✓</span>
+                        <span>Enterprise Ready</span>
+                    </div>
+                    <div class="trust-indicator">
+                        <span>✓</span>
+                        <span>100% Auditable</span>
+                    </div>
+                    <div class="trust-indicator">
+                        <span>✓</span>
+                        <span>Brand Compliant</span>
+                    </div>
+                    <div class="trust-indicator">
+                        <span>✓</span>
+                        <span>JSON Native</span>
+                    </div>
+                </div>
             </div>
             """, unsafe_allow_html=True)
     except Exception as e:
@@ -414,89 +783,45 @@ with col2:
         </div>
         """, unsafe_allow_html=True)
 
-# Add tagline below logo
-st.markdown('<p class="header-tagline">Enterprise AI governance that scales with your brand vision</p>', unsafe_allow_html=True)
-        
-st.markdown('<p class="section-subtext-center">Governed JSON-native image generation with Bria FIBO for brand-safe, auditable visuals.</p>', unsafe_allow_html=True)
+# Status Grid with Modern Cards
+policy_summary = components["policy_engine"].get_policy_summary()
+stats = components["audit_log"].get_statistics()
 
-# Back to top button only
-st.markdown("""
-<button class="back-to-top" onclick="scrollToTop()" title="Back to Top">↑</button>
+# Get setup info for display
+try:
+    setup_info = components["fibo_client"].validate_setup()
+    mode = "Remote API" if setup_info.get("client_available") else "Safe Mode"
+    model_info = "Bria FIBO 1.2" if setup_info.get("client_available") else "Placeholder"
+    token_status = "Verified" if setup_info.get("has_hf_token") else "Missing"
+    client_status = "Ready" if setup_info.get("client_available") else "Safe Mode"
+except:
+    mode = "Unknown"
+    model_info = "Unknown"
+    token_status = "Unknown"
+    client_status = "Unknown"
+
+st.markdown(f"""
+<div class="status-grid">
+    <div class="status-card">
+        <div class="status-card-icon">🛡️</div>
+        <div class="status-card-title">Brand Policies</div>
+        <div class="status-card-value">Active</div>
+        <div class="status-card-desc">{policy_summary['brand_name']}<br>{len(policy_summary.get('policies', {}).get('allowed_themes', []))} allowed themes<br>{len(policy_summary.get('policies', {}).get('prohibited_content', []))} restrictions</div>
+    </div>
+    <div class="status-card">
+        <div class="status-card-icon">🚀</div>
+        <div class="status-card-title">Governance Engine</div>
+        <div class="status-card-value">{mode}</div>
+        <div class="status-card-desc">Model: {model_info}<br>JSON-native prompting<br>Enterprise compliance</div>
+    </div>
+    <div class="status-card">
+        <div class="status-card-icon">📊</div>
+        <div class="status-card-title">Activity Summary</div>
+        <div class="status-card-value">{stats["generation_requests"]}</div>
+        <div class="status-card-desc">{stats["generation_requests"]} requests<br>{stats["approval_rate"]:.1f}% approval rate<br>{stats["policy_violations"]} violations</div>
+    </div>
+</div>
 """, unsafe_allow_html=True)
-
-# Status Pills
-col1, col2, col3, col4 = st.columns([1, 1, 1, 2])
-
-with col1:
-    try:
-        setup_info = components["fibo_client"].validate_setup()
-        if setup_info.get("has_hf_token"):
-            st.markdown('<span class="status-pill status-success">HF Token Verified</span>', unsafe_allow_html=True)
-        else:
-            st.markdown('<span class="status-pill status-error">HF Token Missing</span>', unsafe_allow_html=True)
-    except:
-        st.markdown('<span class="status-pill status-warning">Token Status Unknown</span>', unsafe_allow_html=True)
-
-with col2:
-    try:
-        is_remote_available = components["fibo_client"].validate_setup().get("client_available", False)
-        if is_remote_available:
-            st.markdown('<span class="status-pill status-success">Remote Client Ready</span>', unsafe_allow_html=True)
-        else:
-            st.markdown('<span class="status-pill status-warning">Safe Mode Active</span>', unsafe_allow_html=True)
-    except:
-        st.markdown('<span class="status-pill status-warning">Client Status Unknown</span>', unsafe_allow_html=True)
-
-with col3:
-    st.markdown('<span class="status-pill status-success">Audit Logging Active</span>', unsafe_allow_html=True)
-
-# Add subtle divider
-st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
-
-# Summary Cards Strip with updated names
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    policy_summary = components["policy_engine"].get_policy_summary()
-    st.markdown(f"""
-    <div class="metric-card">
-        <h3>Active Policy Framework</h3>
-        <p><strong>{policy_summary['brand_name']}</strong></p>
-        <p>{len(policy_summary.get('policies', {}).get('allowed_themes', []))} allowed themes</p>
-        <p>{len(policy_summary.get('policies', {}).get('prohibited_content', []))} restrictions</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-with col2:
-    try:
-        setup_info = components["fibo_client"].validate_setup()
-        mode = "Remote API" if setup_info.get("client_available") else "Safe Mode"
-        model_info = "Bria FIBO 1.2" if setup_info.get("client_available") else "Placeholder"
-    except:
-        mode = "Unknown"
-        model_info = "Unknown"
-    
-    st.markdown(f"""
-    <div class="metric-card">
-        <h3>Governance Engine</h3>
-        <p><strong>{mode}</strong></p>
-        <p>Model: {model_info}</p>
-        <p>JSON-native prompting</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-with col3:
-    stats = components["audit_log"].get_statistics()
-    st.markdown(f"""
-    <div class="metric-card">
-        <h3>Operational Metrics</h3>
-        <p><strong>{stats["generation_requests"]}</strong> requests</p>
-        <p>{stats["approval_rate"]:.1f}% approval rate</p>
-        <p>{stats["policy_violations"]} violations</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-st.markdown("<br>", unsafe_allow_html=True)
 
 # Sidebar for brand policy information
 with st.sidebar:
@@ -540,19 +865,23 @@ with st.sidebar:
 tab1, tab2, tab3 = st.tabs(["Generate Images", "Audit Log", "About"])
 
 with tab1:
-    st.subheader("Create a Brand-Safe Prompt")
-    st.markdown("Transform your creative vision into governed prompts that align with enterprise brand standards.")
-    
-    # Add clear visual separator
-    st.markdown("---")
+    st.markdown("""
+    <div class="form-container">
+        <h2 class="form-title">Create Brand-Safe AI Visuals</h2>
+        <p class="form-subtitle">Transform your creative vision into governed prompts that align with enterprise brand standards and regulatory requirements.</p>
+    </div>
+    """, unsafe_allow_html=True)
     
     # Scene Description - full width
     scene = st.text_area(
         "Scene Description",
         placeholder="Describe the scene you want to generate (e.g., 'Modern office workspace with diverse team collaborating')",
-        height=100,
+        height=120,
         help="Provide a clear description that aligns with your brand guidelines"
     )
+    
+    # Visual separator
+    st.markdown('<div class="visual-separator"></div>', unsafe_allow_html=True)
     
     # Form controls layout
     col1, col2 = st.columns([3, 1])
