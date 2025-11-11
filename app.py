@@ -684,9 +684,10 @@ with tab2:
                         if prompt.get('modifiers'):
                             st.write(f"**Modifiers:** {', '.join(prompt['modifiers'])}")
                 
-                # Full JSON in collapsible section
-                with st.expander("View Full JSON"):
-                    st.json(entry)
+                # Full JSON details
+                st.divider()
+                st.write("**Complete Entry Data:**")
+                st.json(entry)
     else:
         st.info("No audit log entries yet. Generate some images to see the audit trail!")
 
