@@ -29,6 +29,8 @@ st.markdown("""
     max-width: 1200px;
     padding-top: 2rem;
     padding-bottom: 3rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
     margin: 0 auto;
     background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
     min-height: 100vh;
@@ -43,6 +45,16 @@ st.markdown("""
 /* Prevent horizontal scrolling and keep layout clean */
 html, body {
     overflow-x: hidden;
+}
+
+/* Fix Streamlit's default spacing issues */
+.main .block-container .element-container {
+    margin-bottom: 0.75rem;
+}
+
+/* Ensure full-width elements align properly */
+.stMarkdown, .stSelectbox, .stTextArea, .stButton {
+    width: 100% !important;
 }
 
 /* Sidebar layout - fixed-width, enterprise-aligned */
@@ -91,17 +103,26 @@ html, body {
 
 /* Clean column spacing */
 .stColumn > div {
-    padding-left: 0.75rem !important;
-    padding-right: 0.75rem !important;
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+}
+
+/* Fix first and last column padding */
+.stColumn:first-child > div {
+    padding-left: 0 !important;
+}
+
+.stColumn:last-child > div {
+    padding-right: 0 !important;
 }
 
 /* Hero Section Styling */
 .hero-section {
     background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-    padding: 1.5rem 2rem 1rem 2rem;
+    padding: 2rem 1rem 1.5rem 1rem;
     text-align: center;
     border-radius: 0 0 16px 16px;
-    margin-bottom: 1.5rem;
+    margin: -1rem -1rem 1.5rem -1rem;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
@@ -164,7 +185,7 @@ html, body {
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 1.25rem;
     margin: 1.5rem 0;
-    padding: 0 1rem;
+    padding: 0;
 }
 
 .status-card {
