@@ -296,6 +296,33 @@ st.markdown("""
         transform: translateY(-3px);
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(16, 185, 129, 0.4);
     }
+    
+    /* Professional form styling */
+    .stTextInput > div > div > input,
+    .stTextArea > div > div > textarea,
+    .stSelectbox > div > div > select {
+        background-color: #1f2937 !important;
+        border: 1px solid #374151 !important;
+        border-radius: 0.5rem !important;
+        color: #f9fafb !important;
+        transition: all 0.2s ease !important;
+    }
+    
+    .stTextInput > div > div > input:focus,
+    .stTextArea > div > div > textarea:focus,
+    .stSelectbox > div > div > select:focus {
+        border-color: #3b82f6 !important;
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1) !important;
+    }
+    
+    .stTextInput > label,
+    .stTextArea > label,
+    .stSelectbox > label,
+    .stSlider > label {
+        color: #e5e7eb !important;
+        font-weight: 600 !important;
+        font-size: 0.95rem !important;
+    }
 </style>
 
 <script>
@@ -501,118 +528,109 @@ with st.sidebar:
 tab1, tab2, tab3 = st.tabs(["Generate Images", "Audit Log", "About"])
 
 with tab1:
-    st.markdown('<h2 class="section-header">Create a Brand-Safe Prompt</h2>', unsafe_allow_html=True)
-    st.markdown('<p class="section-subtext">Transform your creative vision into governed prompts that align with enterprise brand standards and compliance requirements.</p>', unsafe_allow_html=True)
+    st.subheader("Create a Brand-Safe Prompt")
+    st.markdown("Transform your creative vision into governed prompts that align with enterprise brand standards.")
     
-    # Use container for the form
-    with st.container():
-        col1, col2 = st.columns([3, 1])
+    # Main form layout
+    col1, col2 = st.columns([3, 1])
+    
+    with col1:
+        scene = st.text_area(
+            "Scene Description",
+            placeholder="Describe the scene you want to generate (e.g., 'Modern office workspace with diverse team collaborating')",
+            height=100,
+            help="Provide a clear description that aligns with your brand guidelines"
+        )
+        
+        style = st.selectbox(
+            "Visual Style",
+            options=["photorealistic", "artistic", "product photography", "modern", "minimalist"],
+            help="Select the visual approach for your image"
+        )
+    
+    with col2:
+        template = st.selectbox(
+            "Template",
+            options=["basic", "product", "creative"],
+            help="Choose a pre-configured template"
+        )
+        
+        num_variants = st.slider(
+            "Number of Variants",
+            min_value=1,
+            max_value=4,
+            value=2,
+            step=1,
+            help="Generate multiple governed variations"
+        )
+    
+    # Advanced options
+    with st.expander("Advanced Options"):
+        col1, col2 = st.columns(2)
         
         with col1:
-            scene = st.text_area(
-                "Scene Description",
-                placeholder="Describe the scene you want to generate (e.g., 'Modern office workspace with diverse team collaborating')",
-                height=100,
-                help="Provide a clear description that aligns with your brand guidelines"
+            modifiers_input = st.text_input(
+                "Modifiers (comma-separated)",
+                placeholder="high quality, professional, clean",
+                help="Quality and style modifiers"
             )
             
-            style = st.selectbox(
-                "Visual Style",
-                options=["photorealistic", "artistic", "product photography", "modern", "minimalist"],
-                help="Select the visual approach for your image"
+            colors_input = st.text_input(
+                "Colors (comma-separated)",
+                placeholder="blue, white, gray",
+                help="Preferred brand colors"
             )
         
         with col2:
-            template = st.selectbox(
-                "Template",
-                options=["basic", "product", "creative"],
-                help="Choose a pre-configured template"
+            elements_input = st.text_input(
+                "Elements (comma-separated)",
+                placeholder="laptop, plants, natural lighting",
+                help="Specific elements to include"
             )
             
-            num_variants = st.slider(
-                "Number of Variants",
-                min_value=1,
-                max_value=4,
-                value=2,
-                step=1,
-                help="Generate multiple governed variations"
+            mood = st.text_input(
+                "Mood",
+                placeholder="professional, innovative, collaborative",
+                help="Desired atmosphere and tone"
             )
-        
-        # Advanced options
-        with st.expander("Advanced Options"):
-            col1, col2 = st.columns(2)
-            
-            with col1:
-                modifiers_input = st.text_input(
-                    "Modifiers (comma-separated)",
-                    placeholder="high quality, professional, clean",
-                    help="Quality and style modifiers"
-                )
-                
-                colors_input = st.text_input(
-                    "Colors (comma-separated)",
-                    placeholder="blue, white, gray",
-                    help="Preferred brand colors"
-                )
-            
-            with col2:
-                elements_input = st.text_input(
-                    "Elements (comma-separated)",
-                    placeholder="laptop, plants, natural lighting",
-                    help="Specific elements to include"
-                )
-                
-                mood = st.text_input(
-                    "Mood",
-                    placeholder="professional, innovative, collaborative",
-                    help="Desired atmosphere and tone"
-                )
-        
-        # Generate button and view JSON
-        st.markdown("<br>", unsafe_allow_html=True)
-        
-        # Center-aligned CTA with enhanced styling
-        col1, col2, col3 = st.columns([1, 2, 1])
-        with col2:
-            st.markdown('<p class="section-subtext-center" style="margin-bottom: 1rem; font-weight: 500;">Ready to generate brand-compliant visuals?</p>', unsafe_allow_html=True)
-            generate_clicked = st.button("🚀 Generate Governed Images", type="primary", use_container_width=True)
-        
-        # View JSON Prompt link
-        if scene:
-            with st.expander("View JSON Prompt", expanded=False):
-                try:
-                    # Parse advanced options
-                    modifiers = [m.strip() for m in modifiers_input.split(",") if m.strip()] if modifiers_input else None
-                    colors = [c.strip() for c in colors_input.split(",") if c.strip()] if colors_input else None
-                    elements = [e.strip() for e in elements_input.split(",") if e.strip()] if elements_input else None
-                    
-                    # Create prompt preview
-                    if template != "basic":
-                        preview_prompt = components["vlm_agent"].apply_template(
-                            template,
-                            scene,
-                            style=style,
-                            modifiers=modifiers,
-                            colors=colors,
-                            elements=elements,
-                            mood=mood
-                        )
-                    else:
-                        preview_prompt = components["vlm_agent"].create_prompt(
-                            scene,
-                            style=style,
-                            modifiers=modifiers,
-                            colors=colors,
-                            elements=elements,
-                            mood=mood
-                        )
-                    st.json(preview_prompt)
-                except Exception as e:
-                    st.error("Unable to generate prompt preview")
     
-    st.markdown("<br>", unsafe_allow_html=True)
+    # Generate button - full width centered
+    generate_clicked = st.button("Generate Governed Images", type="primary", use_container_width=True)
     
-    # Only process if button clicked and scene is provided
+    # View JSON Prompt preview
+    if scene:
+        with st.expander("View JSON Prompt", expanded=False):
+            try:
+                # Parse advanced options
+                modifiers = [m.strip() for m in modifiers_input.split(",") if m.strip()] if modifiers_input else None
+                colors = [c.strip() for c in colors_input.split(",") if c.strip()] if colors_input else None
+                elements = [e.strip() for e in elements_input.split(",") if e.strip()] if elements_input else None
+                
+                # Create prompt preview
+                if template != "basic":
+                    preview_prompt = components["vlm_agent"].apply_template(
+                        template,
+                        scene,
+                        style=style,
+                        modifiers=modifiers,
+                        colors=colors,
+                        elements=elements,
+                        mood=mood
+                    )
+                else:
+                    preview_prompt = components["vlm_agent"].create_prompt(
+                        scene,
+                        style=style,
+                        modifiers=modifiers,
+                        colors=colors,
+                        elements=elements,
+                        mood=mood
+                    )
+                st.json(preview_prompt)
+            except Exception as e:
+                st.error("Unable to generate prompt preview")
+    
+    # Process generation request
     if generate_clicked:
         if not scene:
             st.error("Please provide a scene description!")
