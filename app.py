@@ -83,7 +83,22 @@ html, body {
 }
 
 .stTabs [data-baseweb="tab-panel"] {
-    padding-top: 1rem !important;
+    padding-top: 0.5rem !important;
+}
+
+/* Compact form elements */
+.stTextArea > label, .stSelectbox > label, .stSlider > label {
+    margin-bottom: 0.25rem !important;
+    font-size: 0.9rem !important;
+}
+
+.stTextArea, .stSelectbox, .stSlider {
+    margin-bottom: 0.75rem !important;
+}
+
+.stButton {
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
 }
 
 .stMetric {
@@ -183,8 +198,8 @@ html, body {
 .status-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 1.25rem;
-    margin: 1.5rem 0;
+    gap: 1rem;
+    margin: 1rem 0;
     padding: 0;
 }
 
@@ -193,7 +208,7 @@ html, body {
     backdrop-filter: blur(10px);
     border: 1px solid rgba(59, 130, 246, 0.2);
     border-radius: 10px;
-    padding: 1.25rem;
+    padding: 1rem;
     text-align: center;
     transition: all 0.3s ease;
     position: relative;
@@ -649,22 +664,19 @@ with st.sidebar:
 tab1, tab2, tab3 = st.tabs(["Generate Images", "Audit Log", "About"])
 
 with tab1:
-    # Clear section heading instead of form container
-    st.markdown("### Create Brand-Safe AI Visuals")
-    st.markdown("Transform your creative vision into governed prompts that align with enterprise brand standards and regulatory requirements.")
+    # Compact section heading
+    st.markdown("#### Create Brand-Safe AI Visuals")
+    st.markdown("*Transform your creative vision into governed prompts that align with enterprise brand standards and regulatory requirements.*")
     
-    # Scene Description - full width
+    # Scene Description - more compact
     scene = st.text_area(
         "Scene Description",
         placeholder="Describe the scene you want to generate (e.g., 'Modern office workspace with diverse team collaborating')",
-        height=120,
+        height=100,
         help="Provide a clear description that aligns with your brand guidelines"
     )
     
-    # Visual separator
-    st.markdown('<div class="visual-separator"></div>', unsafe_allow_html=True)
-    
-    # Form controls layout
+    # Form controls layout - more compact
     col1, col2 = st.columns([3, 1])
     
     with col1:
