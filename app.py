@@ -89,7 +89,7 @@ with st.sidebar:
     with col2:
         st.metric("Violations", stats["policy_violations"])
         approval_rate = stats.get("approval_rate", 0)
-        st.metric("Approval Rate", f"{approval_rate:.1f}%")
+                st.metric("Approval Rate", f"{stats['approval_rate']:.1f}%")
 
 # Main content area
 tab1, tab2, tab3 = st.tabs(["🎨 Generate Images", "📜 Audit Log", "ℹ️ About"])
@@ -251,15 +251,50 @@ with tab1:
                             st.json(enhanced_prompt)
                         prompt = enhanced_prompt
                 
-                # Generate images with error handling
+                # Generate images with progress tracking
                 st.subheader("🖼️ Generated Images")
                 
                 try:
-                    with st.spinner("Generating images..."):
+                    # Show generation info and progress  
+                    estimated_time = num_variants * 17  # Average 17 seconds per variant
+                    
+                    # Progress info box
+                    with st.container():
+                        st.info(f"🎨 **Generating {num_variants} creative variant{'s' if num_variants > 1 else ''}**")
+                        
+                        col1, col2, col3 = st.columns(3)
+                        with col1:
+                            st.metric("🎯 Variants", num_variants)
+                        with col2:
+                            st.metric("⏱️ Est. Time", f"~{estimated_time}s")
+                        with col3:
+                            st.metric("🎨 Model", "Bria FIBO")
+                        
+                        # Progress steps
+                        st.markdown("""
+                        **Generation Process:**
+                        1. 🔄 Initializing FIBO pipeline with your HF token
+                        2. 🎨 Creating unique variants with random seeds  
+                        3. ✨ Applying creative enhancements (lighting, angles, moods)
+                        4. 🛡️ Ensuring brand compliance throughout
+                        5. ✅ Finalizing high-quality images
+                        """)
+                    
+                    # Actual generation with enhanced spinner
+                    with st.spinner(f"🎨 Generating {num_variants} brand-compliant creative variants... This may take {estimated_time}s"):
+                        import time
+                        start_time = time.time()
+                        
                         results = components["fibo_client"].generate_images(
                             prompt,
                             num_variants=num_variants
                         )
+                        
+                        generation_time = time.time() - start_time
+                        
+                        # Show completion message
+                        if results:
+                            st.success(f"✅ Generation completed in {generation_time:.1f}s!")
                         
                         # Log results
                         components["audit_log"].log_generation_result(entry_id, results)
