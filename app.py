@@ -26,63 +26,73 @@ st.markdown("""
 <style>
 /* Modern App Foundation */
 .main .block-container {
-    padding: 0;
+    padding: 0.5rem 1rem;
     max-width: 100%;
     background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
     min-height: 100vh;
 }
 
+/* General spacing optimization */
+.stMarkdown {
+    margin-bottom: 0.75rem !important;
+}
+
+/* Tab content spacing */
+.stTabs [data-baseweb="tab-panel"] {
+    padding-top: 1rem !important;
+}
+
 /* Hero Section Styling */
 .hero-section {
     background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-    padding: 4rem 2rem;
+    padding: 2.5rem 2rem 2rem 2rem;
     text-align: center;
-    border-radius: 0 0 32px 32px;
-    margin-bottom: 3rem;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    border-radius: 0 0 24px 24px;
+    margin-bottom: 2rem;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
 }
 
 .hero-logo {
-    max-width: 320px;
-    margin: 0 auto 2rem;
-    filter: drop-shadow(0 8px 16px rgba(59, 130, 246, 0.3));
+    max-width: 260px;
+    margin: 0 auto 1.5rem;
+    filter: drop-shadow(0 6px 12px rgba(59, 130, 246, 0.3));
 }
 
 .hero-title {
-    font-size: 3.5rem;
+    font-size: 2.8rem;
     font-weight: 700;
     background: linear-gradient(135deg, #3b82f6, #10b981);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    margin-bottom: 1rem;
-    line-height: 1.2;
+    margin-bottom: 0.75rem;
+    line-height: 1.1;
 }
 
 .hero-subtitle {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     color: #94a3b8;
     font-weight: 500;
-    margin-bottom: 2rem;
-    max-width: 600px;
+    margin-bottom: 1.5rem;
+    max-width: 580px;
     margin-left: auto;
     margin-right: auto;
-    line-height: 1.6;
+    line-height: 1.5;
 }
 
 .hero-description {
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: #64748b;
-    max-width: 700px;
-    margin: 0 auto 2rem;
-    line-height: 1.7;
+    max-width: 650px;
+    margin: 0 auto 1.5rem;
+    line-height: 1.6;
 }
 
 /* Trust Indicators */
 .trust-bar {
     display: flex;
     justify-content: center;
-    gap: 3rem;
-    margin: 2rem 0;
+    gap: 2rem;
+    margin: 1.5rem 0;
     flex-wrap: wrap;
 }
 
@@ -92,26 +102,26 @@ st.markdown("""
     gap: 0.5rem;
     color: #10b981;
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
 }
 
 /* Modern Status Cards */
 .status-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
-    margin: 3rem 0;
-    padding: 0 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+    padding: 0 1.5rem;
 }
 
 .status-card {
     background: rgba(30, 41, 59, 0.8);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(59, 130, 246, 0.2);
-    border-radius: 16px;
-    padding: 2rem;
+    border-radius: 12px;
+    padding: 1.5rem;
     text-align: center;
-    transition: all 0.4s ease;
+    transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
 }
@@ -124,7 +134,7 @@ st.markdown("""
     width: 100%;
     height: 100%;
     background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
-    transition: left 0.6s ease;
+    transition: left 0.5s ease;
 }
 
 .status-card:hover::before {
@@ -132,22 +142,22 @@ st.markdown("""
 }
 
 .status-card:hover {
-    transform: translateY(-8px);
+    transform: translateY(-4px);
     border-color: rgba(59, 130, 246, 0.5);
-    box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2);
+    box-shadow: 0 12px 24px rgba(59, 130, 246, 0.15);
 }
 
 .status-card-icon {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
     color: #10b981;
 }
 
 .status-card-title {
-    font-size: 1.3rem;
+    font-size: 1.1rem;
     font-weight: 700;
     color: #f1f5f9;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.4rem;
 }
 
 .status-card-value {
@@ -168,36 +178,36 @@ st.markdown("""
     background: rgba(30, 41, 59, 0.9);
     backdrop-filter: blur(15px);
     border: 1px solid rgba(59, 130, 246, 0.2);
-    border-radius: 20px;
-    padding: 3rem;
-    margin: 2rem;
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+    border-radius: 16px;
+    padding: 2rem;
+    margin: 1.5rem;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
 }
 
 .form-title {
-    font-size: 2rem;
+    font-size: 1.75rem;
     font-weight: 700;
     color: #f1f5f9;
     text-align: center;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
 }
 
 .form-subtitle {
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: #94a3b8;
     text-align: center;
-    margin-bottom: 2.5rem;
-    line-height: 1.6;
+    margin-bottom: 2rem;
+    line-height: 1.5;
 }
 
 /* Enhanced Form Controls */
 .stTextArea textarea {
     background: rgba(15, 23, 42, 0.9) !important;
     border: 2px solid rgba(59, 130, 246, 0.3) !important;
-    border-radius: 12px !important;
+    border-radius: 10px !important;
     color: #f1f5f9 !important;
-    font-size: 1rem !important;
-    padding: 1.25rem !important;
+    font-size: 0.95rem !important;
+    padding: 1rem !important;
     transition: all 0.3s ease !important;
     backdrop-filter: blur(10px) !important;
 }
@@ -243,14 +253,14 @@ st.markdown("""
     background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #10b981 100%) !important;
     color: white !important;
     border: none !important;
-    border-radius: 12px !important;
-    padding: 1rem 3rem !important;
-    font-size: 1.1rem !important;
+    border-radius: 10px !important;
+    padding: 0.875rem 2.5rem !important;
+    font-size: 1rem !important;
     font-weight: 700 !important;
     text-transform: uppercase !important;
-    letter-spacing: 1px !important;
-    transition: all 0.4s ease !important;
-    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4) !important;
+    letter-spacing: 0.5px !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 6px 18px rgba(59, 130, 246, 0.4) !important;
     position: relative !important;
     overflow: hidden !important;
 }
@@ -316,39 +326,39 @@ st.markdown("""
 
 /* Section Headers */
 .section-header {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 700;
     background: linear-gradient(135deg, #3b82f6, #10b981);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     text-align: center;
 }
 
 .section-subtext {
     color: #94a3b8;
-    font-size: 1rem;
+    font-size: 0.95rem;
     text-align: center;
-    margin-bottom: 2rem;
-    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
 }
 
 /* Sidebar Modern Design */
 .sidebar-header {
     color: #f1f5f9;
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     font-weight: 700;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.75rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
     border-bottom: 2px solid rgba(59, 130, 246, 0.3);
     text-align: center;
 }
 
 .sidebar-subheader {
     color: #10b981;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 600;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
 }
 
 /* Modern Image Cards */
@@ -356,11 +366,11 @@ st.markdown("""
     background: rgba(30, 41, 59, 0.9);
     backdrop-filter: blur(15px);
     border: 1px solid rgba(59, 130, 246, 0.2);
-    border-radius: 16px;
-    padding: 2rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-    transition: all 0.4s ease;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
     overflow: hidden;
     position: relative;
 }
@@ -373,7 +383,7 @@ st.markdown("""
     width: 100%;
     height: 100%;
     background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.1), transparent);
-    transition: left 0.6s ease;
+    transition: left 0.5s ease;
 }
 
 .image-card:hover::before {
@@ -381,27 +391,27 @@ st.markdown("""
 }
 
 .image-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-3px);
     border-color: rgba(16, 185, 129, 0.5);
-    box-shadow: 0 25px 50px rgba(16, 185, 129, 0.2);
+    box-shadow: 0 15px 30px rgba(16, 185, 129, 0.15);
 }
 
 .image-caption {
     text-align: center;
     color: #94a3b8;
-    font-size: 0.95rem;
-    margin-top: 1rem;
+    font-size: 0.9rem;
+    margin-top: 0.75rem;
     font-weight: 500;
-    padding-top: 1rem;
+    padding-top: 0.75rem;
     border-top: 1px solid rgba(59, 130, 246, 0.2);
 }
 
 /* Visual Separators */
 .visual-separator {
-    height: 2px;
+    height: 1px;
     background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.5), rgba(16, 185, 129, 0.5), transparent);
-    margin: 3rem 0;
-    border-radius: 2px;
+    margin: 2rem 0;
+    border-radius: 1px;
 }
 
 /* Hide Streamlit Elements */
