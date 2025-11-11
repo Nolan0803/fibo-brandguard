@@ -34,92 +34,113 @@ st.markdown("""
 
 /* General spacing optimization */
 .stMarkdown {
-    margin-bottom: 0.75rem !important;
+    margin-bottom: 0.5rem !important;
 }
 
 /* Tab content spacing */
 .stTabs [data-baseweb="tab-panel"] {
-    padding-top: 1rem !important;
+    padding-top: 0.75rem !important;
+}
+
+/* Better text alignment and spacing */
+.stMetric {
+    text-align: center !important;
+}
+
+.stMetric > div {
+    justify-content: center !important;
+}
+
+/* Compact expander styling */
+.streamlit-expander {
+    border: none !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+}
+
+/* Better column spacing */
+.stColumn > div {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
 }
 
 /* Hero Section Styling */
 .hero-section {
     background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-    padding: 2.5rem 2rem 2rem 2rem;
+    padding: 1.5rem 2rem 1rem 2rem;
     text-align: center;
-    border-radius: 0 0 24px 24px;
-    margin-bottom: 2rem;
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+    border-radius: 0 0 16px 16px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
 .hero-logo {
-    max-width: 260px;
-    margin: 0 auto 1.5rem;
-    filter: drop-shadow(0 6px 12px rgba(59, 130, 246, 0.3));
+    max-width: 200px;
+    margin: 0 auto 1rem;
+    filter: drop-shadow(0 4px 8px rgba(59, 130, 246, 0.3));
 }
 
 .hero-title {
-    font-size: 2.8rem;
+    font-size: 2.2rem;
     font-weight: 700;
     background: linear-gradient(135deg, #3b82f6, #10b981);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
     line-height: 1.1;
 }
 
 .hero-subtitle {
-    font-size: 1.2rem;
+    font-size: 1rem;
     color: #94a3b8;
     font-weight: 500;
-    margin-bottom: 1.5rem;
-    max-width: 580px;
+    margin-bottom: 1rem;
+    max-width: 500px;
     margin-left: auto;
     margin-right: auto;
-    line-height: 1.5;
+    line-height: 1.4;
 }
 
 .hero-description {
-    font-size: 1rem;
+    font-size: 0.9rem;
     color: #64748b;
-    max-width: 650px;
-    margin: 0 auto 1.5rem;
-    line-height: 1.6;
+    max-width: 580px;
+    margin: 0 auto 1rem;
+    line-height: 1.5;
 }
 
 /* Trust Indicators */
 .trust-bar {
     display: flex;
     justify-content: center;
-    gap: 2rem;
-    margin: 1.5rem 0;
+    gap: 1.5rem;
+    margin: 1rem 0 0 0;
     flex-wrap: wrap;
 }
 
 .trust-indicator {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.4rem;
     color: #10b981;
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
 }
 
 /* Modern Status Cards */
 .status-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1.5rem;
-    margin: 2rem 0;
-    padding: 0 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.25rem;
+    margin: 1.5rem 0;
+    padding: 0 1rem;
 }
 
 .status-card {
     background: rgba(30, 41, 59, 0.8);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(59, 130, 246, 0.2);
-    border-radius: 12px;
-    padding: 1.5rem;
+    border-radius: 10px;
+    padding: 1.25rem;
     text-align: center;
     transition: all 0.3s ease;
     position: relative;
@@ -142,22 +163,22 @@ st.markdown("""
 }
 
 .status-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-2px);
     border-color: rgba(59, 130, 246, 0.5);
-    box-shadow: 0 12px 24px rgba(59, 130, 246, 0.15);
+    box-shadow: 0 8px 16px rgba(59, 130, 246, 0.15);
 }
 
 .status-card-icon {
-    font-size: 2rem;
-    margin-bottom: 0.75rem;
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
     color: #10b981;
 }
 
 .status-card-title {
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 700;
     color: #f1f5f9;
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.3rem;
 }
 
 .status-card-value {
@@ -178,26 +199,26 @@ st.markdown("""
     background: rgba(30, 41, 59, 0.9);
     backdrop-filter: blur(15px);
     border: 1px solid rgba(59, 130, 246, 0.2);
-    border-radius: 16px;
-    padding: 2rem;
-    margin: 1.5rem;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1rem;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
 .form-title {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: #f1f5f9;
     text-align: center;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
 }
 
 .form-subtitle {
-    font-size: 1rem;
+    font-size: 0.9rem;
     color: #94a3b8;
     text-align: center;
-    margin-bottom: 2rem;
-    line-height: 1.5;
+    margin-bottom: 1.5rem;
+    line-height: 1.4;
 }
 
 /* Enhanced Form Controls */
@@ -410,7 +431,7 @@ st.markdown("""
 .visual-separator {
     height: 1px;
     background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.5), rgba(16, 185, 129, 0.5), transparent);
-    margin: 2rem 0;
+    margin: 1.5rem 0;
     border-radius: 1px;
 }
 
@@ -467,62 +488,31 @@ def initialize_components():
 
 components = initialize_components()
 
-# Header Section with Logo
-col1, col2, col3 = st.columns([1, 2, 1])
-with col2:
-    try:
-        # Try to display the logo from various possible locations
-        import os
-        logo_paths = ["assets/logo.png", "logo.png", "images/logo.png"]
-        logo_displayed = False
-        
-        for logo_path in logo_paths:
-            if os.path.exists(logo_path):
-                st.image(logo_path, width=360)  # Reduced by 20% from 450px
-                logo_displayed = True
-                # Debug info (can be removed later)
-                # st.success(f"Logo loaded from: {logo_path}")
-                break
-        
-        if not logo_displayed:
-            # Fallback to professional text header
-            st.markdown("""
-            <div class="hero-section">
-                <div style="text-align: center; padding: 1rem 0 2rem;">
-                    <h1 style="color: #3b82f6; font-size: 4rem; margin: 0; font-weight: 800; text-shadow: 0 0 20px rgba(59, 130, 246, 0.3);">
-                        🛡️ FIBO BrandGuard
-                    </h1>
-                    <p style="color: #10b981; font-size: 1.3rem; margin: 0.5rem 0; font-weight: 600; letter-spacing: 1px;">
-                        ENTERPRISE AI GOVERNANCE
-                    </p>
-                </div>
-                <h2 class="hero-title">Transform Creative Vision with Governed AI</h2>
-                <p class="hero-subtitle">Advanced JSON-native prompting with Bria FIBO for enterprises that demand both creativity and compliance</p>
-                <p class="hero-description">Generate stunning, brand-safe visuals while maintaining complete audit transparency. Our enterprise-grade platform ensures every image aligns with your brand guidelines and regulatory requirements.</p>
-                
-                <div class="trust-bar">
-                    <div class="trust-indicator">
-                        <span>✓</span>
-                        <span>Enterprise Ready</span>
-                    </div>
-                    <div class="trust-indicator">
-                        <span>✓</span>
-                        <span>100% Auditable</span>
-                    </div>
-                    <div class="trust-indicator">
-                        <span>✓</span>
-                        <span>Brand Compliant</span>
-                    </div>
-                    <div class="trust-indicator">
-                        <span>✓</span>
-                        <span>JSON Native</span>
-                    </div>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-    except Exception as e:
-        # Fallback to professional text header
-        st.markdown("""
+# Compact Header Section
+st.markdown("""
+<div class="hero-section">
+    <h1 class="hero-title">🛡️ FIBO BrandGuard</h1>
+    <p class="hero-subtitle">Enterprise AI Governance Platform</p>
+    <div class="trust-bar">
+        <div class="trust-indicator">
+            <span>✓</span>
+            <span>Enterprise Ready</span>
+        </div>
+        <div class="trust-indicator">
+            <span>✓</span>
+            <span>100% Auditable</span>
+        </div>
+        <div class="trust-indicator">
+            <span>✓</span>
+            <span>Brand Compliant</span>
+        </div>
+        <div class="trust-indicator">
+            <span>✓</span>
+            <span>JSON Native</span>
+        </div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
         <div style="text-align: center; padding: 2rem 0;">
             <h1 style="color: #3b82f6; font-size: 3rem; margin: 0; font-weight: 700;">
                 �️ FIBO BrandGuard
