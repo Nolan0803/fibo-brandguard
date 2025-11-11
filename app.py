@@ -18,31 +18,62 @@ st.set_page_config(
     page_title="FIBO BrandGuard",
     page_icon="🛡️",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
 )
 
-# Modern Marketing-Focused CSS
+# Enterprise-Grade Layout CSS
 st.markdown("""
 <style>
-/* Modern App Foundation */
+/* Global page configuration - constrain content width but use wide layout */
 .main .block-container {
-    padding: 0.5rem 1rem;
-    max-width: 100%;
+    max-width: 1200px;
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+    margin: 0 auto;
     background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
     min-height: 100vh;
 }
 
-/* General spacing optimization */
+/* Tighten vertical rhythm between top-level blocks */
+.main .block-container > div {
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+/* Prevent horizontal scrolling and keep layout clean */
+html, body {
+    overflow-x: hidden;
+}
+
+/* Sidebar layout - fixed-width, enterprise-aligned */
+[data-testid="stSidebar"] {
+    min-width: 260px;
+    max-width: 260px;
+}
+
+[data-testid="stSidebar"] .block-container {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
+/* Hero / logo / banner images - prevent massive full-screen takeover */
+.hero-image img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-height: 420px;
+    object-fit: contain;
+}
+
+/* Enterprise spacing and typography */
 .stMarkdown {
-    margin-bottom: 0.5rem !important;
+    margin-bottom: 0.75rem !important;
 }
 
-/* Tab content spacing */
 .stTabs [data-baseweb="tab-panel"] {
-    padding-top: 0.75rem !important;
+    padding-top: 1rem !important;
 }
 
-/* Better text alignment and spacing */
 .stMetric {
     text-align: center !important;
 }
@@ -51,16 +82,17 @@ st.markdown("""
     justify-content: center !important;
 }
 
-/* Compact expander styling */
+/* Professional expander styling */
 .streamlit-expander {
-    border: none !important;
+    border: 1px solid rgba(59, 130, 246, 0.2) !important;
+    border-radius: 8px !important;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
 }
 
-/* Better column spacing */
+/* Clean column spacing */
 .stColumn > div {
-    padding-left: 0.5rem !important;
-    padding-right: 0.5rem !important;
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
 }
 
 /* Hero Section Styling */
@@ -596,12 +628,9 @@ with st.sidebar:
 tab1, tab2, tab3 = st.tabs(["Generate Images", "Audit Log", "About"])
 
 with tab1:
-    st.markdown("""
-    <div class="form-container">
-        <h2 class="form-title">Create Brand-Safe AI Visuals</h2>
-        <p class="form-subtitle">Transform your creative vision into governed prompts that align with enterprise brand standards and regulatory requirements.</p>
-    </div>
-    """, unsafe_allow_html=True)
+    # Clear section heading instead of form container
+    st.markdown("### Create Brand-Safe AI Visuals")
+    st.markdown("Transform your creative vision into governed prompts that align with enterprise brand standards and regulatory requirements.")
     
     # Scene Description - full width
     scene = st.text_area(
@@ -739,7 +768,7 @@ with tab1:
                     )
                 
                 # Validate against policies
-                st.markdown('<h3 class="section-header">Policy Validation</h3>', unsafe_allow_html=True)
+                st.markdown("### Policy Validation")
                 is_valid, violations, warnings = components["policy_engine"].validate_prompt(prompt)
                 
                 policy_decision = {
@@ -792,8 +821,8 @@ with tab1:
                         prompt = enhanced_prompt
                 
                 # Generated Images Section
-                st.markdown('<h3 class="section-header">Generated Images</h3>', unsafe_allow_html=True)
-                st.markdown('<p class="section-subtext">All variants enforced by brand policies and recorded in the audit log.</p>', unsafe_allow_html=True)
+                st.markdown("### Generated Images")
+                st.markdown("All variants enforced by brand policies and recorded in the audit log.")
                 
                 try:
                     # Show generation info and progress  
@@ -843,50 +872,73 @@ with tab1:
                         if not results:
                             st.warning("Remote FIBO generation is temporarily unavailable. Your prompt and audit log are still recorded.")
                         else:
-                            # Display images in styled cards
-                            for idx, result in enumerate(results):
-                                st.markdown(f"""
-                                <div class="image-card">
-                                    <h4 style="color: #3b82f6; margin-bottom: 1rem;">Variant {result['variant_id']}</h4>
-                                """, unsafe_allow_html=True)
-                                
-                                if "image" in result and result["image"]:
-                                    st.image(
-                                        result["image"], 
-                                        use_column_width=True
-                                    )
-                                    # Add custom caption
-                                    st.markdown(f'<p class="image-caption">Variant {result["variant_id"]} — Enterprise Compliant</p>', unsafe_allow_html=True)
-                                
-                                # Status indicator
-                                if result.get("status") == "success":
-                                    st.markdown('<span class="status-pill status-success">Compliant</span>', unsafe_allow_html=True)
-                                elif result.get("status") == "safe_mode":
-                                    st.markdown('<span class="status-pill status-warning">Safe Mode Preview</span>', unsafe_allow_html=True)
-                                else:
-                                    st.markdown('<span class="status-pill status-warning">Placeholder Mode</span>', unsafe_allow_html=True)
-                                
-                                # Technical details in expander
-                                with st.expander(f"Technical Details"):
-                                    metadata = result.get("metadata", {})
-                                    col1, col2 = st.columns(2)
-                                    with col1:
-                                        st.write(f"**Model:** {metadata.get('model', 'Unknown')}")
-                                        st.write(f"**Provider:** {metadata.get('provider', 'Unknown')}")
-                                        st.write(f"**Generation Time:** {result.get('generation_time', 0):.1f}s")
-                                    with col2:
-                                        st.write(f"**Size:** {metadata.get('size', 'Unknown')}")
-                                        st.write(f"**Seed:** {metadata.get('seed', 'Unknown')}")
-                                    
-                                    if result.get("prompt_string"):
-                                        st.write("**Final Prompt:**")
-                                        prompt_display = result.get("prompt_string", "")
-                                        if len(prompt_display) > 200:
-                                            prompt_display = prompt_display[:200] + "..."
-                                        st.code(prompt_display)
-                                
-                                st.markdown("</div>", unsafe_allow_html=True)
-                                st.markdown("<br>", unsafe_allow_html=True)
+                            # Display images in responsive columns
+                            if len(results) > 1:
+                                cols = st.columns(len(results))
+                                for idx, (col, result) in enumerate(zip(cols, results), start=1):
+                                    with col:
+                                        if "image" in result and result["image"]:
+                                            st.image(result["image"], use_column_width=True)
+                                            st.caption(f"Variant {idx}")
+                                            
+                                            # Status indicator
+                                            if result.get("status") == "success":
+                                                st.markdown('<span class="status-pill status-success">Compliant</span>', unsafe_allow_html=True)
+                                            elif result.get("status") == "safe_mode":
+                                                st.markdown('<span class="status-pill status-warning">Safe Mode Preview</span>', unsafe_allow_html=True)
+                                            else:
+                                                st.markdown('<span class="status-pill status-warning">Placeholder Mode</span>', unsafe_allow_html=True)
+                                            
+                                            # Technical details in expander
+                                            with st.expander(f"View Details"):
+                                                metadata = result.get("metadata", {})
+                                                st.write(f"**Model:** {metadata.get('model', 'Unknown')}")
+                                                st.write(f"**Provider:** {metadata.get('provider', 'Unknown')}")
+                                                st.write(f"**Generation Time:** {result.get('generation_time', 0):.1f}s")
+                                                st.write(f"**Size:** {metadata.get('size', 'Unknown')}")
+                                                st.write(f"**Seed:** {metadata.get('seed', 'Unknown')}")
+                                                
+                                                if result.get("prompt_string"):
+                                                    st.write("**Final Prompt:**")
+                                                    prompt_display = result.get("prompt_string", "")
+                                                    if len(prompt_display) > 200:
+                                                        prompt_display = prompt_display[:200] + "..."
+                                                    st.code(prompt_display)
+                            else:
+                                # Single image - center it
+                                result = results[0]
+                                col1, col2, col3 = st.columns([1, 2, 1])
+                                with col2:
+                                    if "image" in result and result["image"]:
+                                        st.image(result["image"], use_column_width=True)
+                                        st.caption("Variant 1")
+                                        
+                                        # Status indicator
+                                        if result.get("status") == "success":
+                                            st.markdown('<span class="status-pill status-success">Compliant</span>', unsafe_allow_html=True)
+                                        elif result.get("status") == "safe_mode":
+                                            st.markdown('<span class="status-pill status-warning">Safe Mode Preview</span>', unsafe_allow_html=True)
+                                        else:
+                                            st.markdown('<span class="status-pill status-warning">Placeholder Mode</span>', unsafe_allow_html=True)
+                                        
+                                        # Technical details in expander
+                                        with st.expander(f"View Details"):
+                                            metadata = result.get("metadata", {})
+                                            col_a, col_b = st.columns(2)
+                                            with col_a:
+                                                st.write(f"**Model:** {metadata.get('model', 'Unknown')}")
+                                                st.write(f"**Provider:** {metadata.get('provider', 'Unknown')}")
+                                                st.write(f"**Generation Time:** {result.get('generation_time', 0):.1f}s")
+                                            with col_b:
+                                                st.write(f"**Size:** {metadata.get('size', 'Unknown')}")
+                                                st.write(f"**Seed:** {metadata.get('seed', 'Unknown')}")
+                                            
+                                            if result.get("prompt_string"):
+                                                st.write("**Final Prompt:**")
+                                                prompt_display = result.get("prompt_string", "")
+                                                if len(prompt_display) > 200:
+                                                    prompt_display = prompt_display[:200] + "..."
+                                                st.code(prompt_display)
                 
                 except Exception as e:
                     st.error("Remote FIBO generation is temporarily unavailable. Your prompt and audit log are still recorded.")
@@ -899,8 +951,8 @@ with tab1:
                 print(f"Processing error: {e}")
 
 with tab2:
-    st.markdown('<h2 class="section-header">Audit Log</h2>', unsafe_allow_html=True)
-    st.markdown('<p class="section-subtext">Every generation is captured with inputs, decisions, and outputs for compliance review.</p>', unsafe_allow_html=True)
+    st.markdown("### Audit Log")
+    st.markdown("Every generation is captured with inputs, decisions, and outputs for compliance review.")
     
     # Summary metrics at the top
     stats = components["audit_log"].get_statistics()
@@ -959,7 +1011,7 @@ with tab2:
     entries = components["audit_log"].get_recent_entries(limit)
     
     if entries:
-        st.markdown('<h4 style="color: #3b82f6; margin: 1rem 0 0.5rem 0;">Recent Activity</h4>', unsafe_allow_html=True)
+        st.markdown("#### Recent Activity")
         
         for entry in reversed(entries):
             entry_type = entry.get('type', 'unknown').replace('_', ' ').title()
@@ -1009,14 +1061,14 @@ with tab2:
         st.info("No audit log entries yet. Generate some images to see the audit trail!")
 
 with tab3:
-    st.markdown('<h2 class="section-header">About FIBO BrandGuard</h2>', unsafe_allow_html=True)
+    st.markdown("### About FIBO BrandGuard")
     
     # Hero section
     st.markdown("""
     <div style='background: linear-gradient(135deg, #3b82f6 0%, #059669 100%); padding: 2rem; border-radius: 0.75rem; margin-bottom: 2rem; border: 1px solid #374151;'>
-    <h3 style='color: white; text-align: center; margin: 0; font-size: 1.5rem;'>
+    <h4 style='color: white; text-align: center; margin: 0; font-size: 1.25rem;'>
     Enterprise-Grade AI Governance Platform
-    </h3>
+    </h4>
     <p style='color: rgba(255, 255, 255, 0.9); text-align: center; margin: 1rem 0 0 0; font-size: 1rem;'>
     FIBO BrandGuard bridges the gap between AI image generation and enterprise governance, ensuring every generated visual aligns with brand policies while maintaining complete audit trails for regulatory compliance.
     </p>
