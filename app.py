@@ -141,7 +141,101 @@ st.markdown("""
         border-radius: 0.5rem;
         border: 1px solid #374151;
     }
+    
+    /* Floating Back to Top Button */
+    .back-to-top {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #3b82f6 0%, #059669 100%);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        font-size: 18px;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        transition: all 0.3s ease;
+        z-index: 1000;
+        display: none;
+    }
+    
+    .back-to-top:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+    }
+    
+    /* Quick Navigation Floating Menu */
+    .quick-nav {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: rgba(31, 41, 55, 0.95);
+        border-radius: 0.75rem;
+        padding: 0.75rem;
+        border: 1px solid #374151;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        z-index: 1000;
+        backdrop-filter: blur(8px);
+    }
+    
+    .quick-nav button {
+        display: block;
+        width: 100%;
+        background: transparent;
+        color: #9ca3af;
+        border: none;
+        padding: 0.5rem 0.75rem;
+        margin: 0.25rem 0;
+        border-radius: 0.375rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 0.875rem;
+        text-align: left;
+    }
+    
+    .quick-nav button:hover {
+        background: #374151;
+        color: #3b82f6;
+    }
+    
+    .quick-nav button.active {
+        background: #3b82f6;
+        color: white;
+    }
 </style>
+
+<script>
+// Back to top functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.querySelector('.back-to-top');
+    if (backToTop) {
+        if (window.pageYOffset > 300) {
+            backToTop.style.display = 'block';
+        } else {
+            backToTop.style.display = 'none';
+        }
+    }
+});
+
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+// Quick navigation to tabs
+function switchToTab(tabIndex) {
+    // Find all tab buttons and click the desired one
+    const tabButtons = document.querySelectorAll('[data-testid="stTabs"] button');
+    if (tabButtons[tabIndex]) {
+        tabButtons[tabIndex].click();
+        scrollToTop();
+    }
+}
+</script>
 """, unsafe_allow_html=True)
 
 # Initialize components
@@ -160,6 +254,17 @@ components = initialize_components()
 # Header Section
 st.markdown('<h1 class="section-header">FIBO BrandGuard</h1>', unsafe_allow_html=True)
 st.markdown('<p class="section-subtext">Governed JSON-native image generation with Bria FIBO for brand-safe, auditable visuals.</p>', unsafe_allow_html=True)
+
+# Floating Navigation Components
+st.markdown("""
+<div class="quick-nav">
+    <button onclick="switchToTab(0)" title="Generate Images">🎨 Generate</button>
+    <button onclick="switchToTab(1)" title="Audit Log">📋 Audit Log</button>
+    <button onclick="switchToTab(2)" title="About">ℹ️ About</button>
+</div>
+
+<button class="back-to-top" onclick="scrollToTop()" title="Back to Top">↑</button>
+""", unsafe_allow_html=True)
 
 # Status Pills
 col1, col2, col3, col4 = st.columns([1, 1, 1, 2])
