@@ -531,17 +531,18 @@ with tab1:
     st.subheader("Create a Brand-Safe Prompt")
     st.markdown("Transform your creative vision into governed prompts that align with enterprise brand standards.")
     
-    # Main form layout
+    # Scene Description - full width
+    scene = st.text_area(
+        "Scene Description",
+        placeholder="Describe the scene you want to generate (e.g., 'Modern office workspace with diverse team collaborating')",
+        height=100,
+        help="Provide a clear description that aligns with your brand guidelines"
+    )
+    
+    # Form controls layout
     col1, col2 = st.columns([3, 1])
     
     with col1:
-        scene = st.text_area(
-            "Scene Description",
-            placeholder="Describe the scene you want to generate (e.g., 'Modern office workspace with diverse team collaborating')",
-            height=100,
-            help="Provide a clear description that aligns with your brand guidelines"
-        )
-        
         style = st.selectbox(
             "Visual Style",
             options=["photorealistic", "artistic", "product photography", "modern", "minimalist"],
