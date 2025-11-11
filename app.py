@@ -513,15 +513,6 @@ st.markdown("""
     </div>
 </div>
 """, unsafe_allow_html=True)
-        <div style="text-align: center; padding: 2rem 0;">
-            <h1 style="color: #3b82f6; font-size: 3rem; margin: 0; font-weight: 700;">
-                �️ FIBO BrandGuard
-            </h1>
-            <p style="color: #10b981; font-size: 1.2rem; margin: 0.5rem 0 0 0; font-weight: 500;">
-                Controlled Visuals. Trusted Brands
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
 
 # Status Grid with Modern Cards
 policy_summary = components["policy_engine"].get_policy_summary()
