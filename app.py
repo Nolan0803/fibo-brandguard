@@ -24,81 +24,119 @@ st.set_page_config(
 # Enterprise-Grade Layout CSS
 st.markdown("""
 <style>
-/* Global page configuration - constrain content width but use wide layout */
+/* Global page configuration - full viewport usage */
 .main .block-container {
-    max-width: 1200px;
-    padding-top: 2rem;
-    padding-bottom: 3rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
-    margin: 0 auto;
+    max-width: 100% !important;
+    padding: 0.5rem 1rem !important;
+    margin: 0 !important;
     background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
     min-height: 100vh;
 }
 
-/* Tighten vertical rhythm between top-level blocks */
+/* Remove ALL excessive spacing */
 .main .block-container > div {
-    margin-top: 0.75rem;
-    margin-bottom: 0.75rem;
+    margin-top: 0.25rem !important;
+    margin-bottom: 0.25rem !important;
 }
 
-/* Prevent horizontal scrolling and keep layout clean */
+/* Prevent horizontal scrolling and use full width */
 html, body {
     overflow-x: hidden;
+    margin: 0;
+    padding: 0;
 }
 
-/* Fix Streamlit's default spacing issues */
-.main .block-container .element-container {
-    margin-bottom: 0.75rem;
+/* Streamlit container optimization */
+.main {
+    padding: 0 !important;
 }
 
-/* Ensure full-width elements align properly */
-.stMarkdown, .stSelectbox, .stTextArea, .stButton {
+/* Element containers - minimal spacing */
+.element-container {
+    margin: 0.2rem 0 !important;
+    padding: 0 !important;
+}
+
+/* Full width usage for all elements */
+.stMarkdown, .stSelectbox, .stTextArea, .stButton, .stColumns {
     width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
 }
 
-/* Sidebar layout - fixed-width, enterprise-aligned */
+/* Remove Streamlit default margins and spacing */
+.main .block-container .stMarkdown,
+.main .block-container .stSelectbox,
+.main .block-container .stTextArea,
+.main .block-container .stButton,
+.main .block-container .stColumns,
+.main .block-container .stMetric {
+    margin-bottom: 0.25rem !important;
+    padding: 0 !important;
+}
+
+/* Image optimization for better space usage */
+.main img {
+    width: 100% !important;
+    height: auto !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
+}
+
+/* Streamlit columns optimization */
+.stColumns > div[data-testid="column"] {
+    padding: 0 0.25rem !important;
+}
+
+.stColumns > div[data-testid="column"]:first-child {
+    padding-left: 0 !important;
+}
+
+.stColumns > div[data-testid="column"]:last-child {
+    padding-right: 0 !important;
+}
+
+/* Sidebar - proportional but not excessive */
 [data-testid="stSidebar"] {
-    min-width: 260px;
-    max-width: 260px;
+    min-width: 240px;
+    max-width: 240px;
 }
 
 [data-testid="stSidebar"] .block-container {
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
+    padding: 1rem 0.75rem !important;
 }
 
-/* Hero / logo / banner images - prevent massive full-screen takeover */
-.hero-image img {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    max-height: 420px;
-    object-fit: contain;
-}
-
-/* Enterprise spacing and typography */
-.stMarkdown {
-    margin-bottom: 0.75rem !important;
+/* Tabs - full width and minimal spacing */
+.stTabs [data-baseweb="tab-list"] {
+    gap: 0;
+    background: rgba(30, 41, 59, 0.7);
+    border-radius: 8px;
+    padding: 0.25rem;
+    margin: 0.25rem 0 !important;
+    width: 100%;
 }
 
 .stTabs [data-baseweb="tab-panel"] {
-    padding-top: 0.5rem !important;
+    padding: 0.25rem 0 !important;
 }
 
-/* Compact form elements */
+/* Compact form elements - maximize content density */
 .stTextArea > label, .stSelectbox > label, .stSlider > label {
-    margin-bottom: 0.25rem !important;
-    font-size: 0.9rem !important;
+    margin-bottom: 0.1rem !important;
+    font-size: 0.85rem !important;
 }
 
 .stTextArea, .stSelectbox, .stSlider {
-    margin-bottom: 0.75rem !important;
+    margin-bottom: 0.3rem !important;
 }
 
 .stButton {
-    margin-top: 0.5rem !important;
-    margin-bottom: 0.5rem !important;
+    margin: 0.2rem 0 !important;
+}
+
+/* Tight column spacing */
+.stColumn > div {
+    padding: 0 0.25rem !important;
 }
 
 .stMetric {
@@ -116,13 +154,12 @@ html, body {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
 }
 
-/* Clean column spacing */
+/* Clean column spacing - utilize full width */
 .stColumn > div {
-    padding-left: 0.5rem !important;
-    padding-right: 0.5rem !important;
+    padding: 0 0.25rem !important;
 }
 
-/* Fix first and last column padding */
+/* Remove excessive column margins */
 .stColumn:first-child > div {
     padding-left: 0 !important;
 }
@@ -131,75 +168,75 @@ html, body {
     padding-right: 0 !important;
 }
 
-/* Hero Section Styling */
+/* Hero Section - compact but impactful */
 .hero-section {
     background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-    padding: 2rem 1rem 1.5rem 1rem;
+    padding: 1.5rem 0.75rem 1rem 0.75rem;
     text-align: center;
     border-radius: 0 0 16px 16px;
-    margin: -1rem -1rem 1.5rem -1rem;
+    margin: -0.5rem -1rem 1rem -1rem;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
 .hero-logo {
-    max-width: 200px;
-    margin: 0 auto 1rem;
+    max-width: 180px;
+    margin: 0 auto 0.75rem;
     filter: drop-shadow(0 4px 8px rgba(59, 130, 246, 0.3));
 }
 
 .hero-title {
-    font-size: 2.2rem;
+    font-size: 2rem;
     font-weight: 700;
     background: linear-gradient(135deg, #3b82f6, #10b981);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.3rem;
     line-height: 1.1;
 }
 
 .hero-subtitle {
-    font-size: 1rem;
+    font-size: 0.95rem;
     color: #94a3b8;
     font-weight: 500;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
     max-width: 500px;
     margin-left: auto;
     margin-right: auto;
-    line-height: 1.4;
+    line-height: 1.3;
 }
 
 .hero-description {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: #64748b;
     max-width: 580px;
-    margin: 0 auto 1rem;
-    line-height: 1.5;
+    margin: 0 auto 0.75rem;
+    line-height: 1.4;
 }
 
-/* Trust Indicators */
+/* Trust Indicators - compact */
 .trust-bar {
     display: flex;
     justify-content: center;
-    gap: 1.5rem;
-    margin: 1rem 0 0 0;
+    gap: 1rem;
+    margin: 0.75rem 0 0 0;
     flex-wrap: wrap;
 }
 
 .trust-indicator {
     display: flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: 0.3rem;
     color: #10b981;
     font-weight: 600;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
 }
 
-/* Modern Status Cards */
+/* Status Cards - utilize more space efficiently */
 .status-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 1rem;
-    margin: 1rem 0;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.75rem;
+    margin: 0.75rem 0;
     padding: 0;
 }
 
@@ -208,7 +245,7 @@ html, body {
     backdrop-filter: blur(10px);
     border: 1px solid rgba(59, 130, 246, 0.2);
     border-radius: 10px;
-    padding: 1rem;
+    padding: 0.75rem;
     text-align: center;
     transition: all 0.3s ease;
     position: relative;
@@ -262,41 +299,42 @@ html, body {
     line-height: 1.5;
 }
 
-/* Modern Form Container */
+/* Modern Form Container - efficient space usage */
 .form-container {
     background: rgba(30, 41, 59, 0.9);
     backdrop-filter: blur(15px);
     border: 1px solid rgba(59, 130, 246, 0.2);
     border-radius: 12px;
-    padding: 1.5rem;
-    margin: 1rem;
+    padding: 1rem;
+    margin: 0.5rem 0;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
 .form-title {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     font-weight: 700;
     color: #f1f5f9;
     text-align: center;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.3rem;
 }
 
 .form-subtitle {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: #94a3b8;
     text-align: center;
-    margin-bottom: 1.5rem;
-    line-height: 1.4;
+    margin-bottom: 1rem;
+    line-height: 1.3;
 }
 
-/* Enhanced Form Controls */
+/* Enhanced Form Controls - compact but readable */
 .stTextArea textarea {
     background: rgba(15, 23, 42, 0.9) !important;
     border: 2px solid rgba(59, 130, 246, 0.3) !important;
     border-radius: 10px !important;
     color: #f1f5f9 !important;
-    font-size: 0.95rem !important;
-    padding: 1rem !important;
+    font-size: 0.9rem !important;
+    padding: 0.75rem !important;
+    height: 80px !important;
     transition: all 0.3s ease !important;
     backdrop-filter: blur(10px) !important;
 }
