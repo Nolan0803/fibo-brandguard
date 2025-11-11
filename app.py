@@ -1,6 +1,7 @@
 """
 FIBO BrandGuard - Streamlit Application
 A governed, JSON-native Bria FIBO image generation demo for the Bria Hackathon.
+Updated: Modern Enterprise Design
 """
 
 import streamlit as st
