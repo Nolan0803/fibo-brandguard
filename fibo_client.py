@@ -11,12 +11,23 @@ from huggingface_hub import InferenceClient
 from dotenv import load_dotenv
 load_dotenv()
 
-# Load and validate HF_TOKEN
+# Load and validate HF_TOKEN (works with both .env files and Streamlit secrets)
 hf_token = os.getenv("HF_TOKEN")
+if not hf_token:
+    # Try Streamlit secrets if available
+    try:
+        import streamlit as st
+        if hasattr(st, 'secrets') and 'HF_TOKEN' in st.secrets:
+            hf_token = st.secrets["HF_TOKEN"]
+            print("✅ HuggingFace token loaded from Streamlit secrets")
+    except:
+        pass
+
 if hf_token:
-    print("✅ HuggingFace token loaded successfully from .env")
+    if not hasattr(hf_token, '__name__'):  # Not from streamlit secrets
+        print("✅ HuggingFace token loaded successfully from .env")
 else:
-    print("❌ HF_TOKEN not found in .env file. Please add your HuggingFace token to the .env file.")
+    print("❌ HF_TOKEN not found in .env file or Streamlit secrets. Please configure your HuggingFace token.")
 
 def _to_pil_image(result):
     """
@@ -216,7 +227,11 @@ def generate_images_from_json_prompt(json_prompt: dict, num_images: int = 1) -> 
             print(f"✅ Remote FIBO variant {i+1} generated in {latency:.2f}s (seed: {unique_seed})")
         except Exception as e:
             print(f"❌ Remote generation error for variant {i+1}: {e}")
-            return []
+            print(f"❌ Error type: {type(e).__name__}")
+            if hasattr(e, 'response'):
+                print(f"❌ Response status: {getattr(e.response, 'status_code', 'unknown')}")
+            # Continue with other variants instead of returning empty list
+            continue
 
     return images
 
