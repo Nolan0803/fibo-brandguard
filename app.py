@@ -233,69 +233,6 @@ function scrollToTop() {
         behavior: 'smooth'
     });
 }
-
-// Quick navigation to tabs - Updated for Streamlit
-function switchToTab(tabIndex) {
-    // Multiple selectors to find Streamlit tab buttons
-    const selectors = [
-        '[data-testid="stTabs"] button',
-        '.stTabs button',
-        '[role="tab"]',
-        'div[data-testid="stTabs"] div[role="tablist"] button'
-    ];
-    
-    let tabButtons = null;
-    for (const selector of selectors) {
-        tabButtons = document.querySelectorAll(selector);
-        if (tabButtons.length > 0) break;
-    }
-    
-    if (tabButtons && tabButtons[tabIndex]) {
-        // Ensure the button is clickable
-        setTimeout(() => {
-            tabButtons[tabIndex].click();
-            scrollToTop();
-        }, 100);
-    } else {
-        // Fallback: try to find by text content
-        const allButtons = document.querySelectorAll('button');
-        const tabTexts = ['Generate Images', 'Audit Log', 'About'];
-        
-        for (const button of allButtons) {
-            if (button.textContent.includes(tabTexts[tabIndex])) {
-                setTimeout(() => {
-                    button.click();
-                    scrollToTop();
-                }, 100);
-                break;
-            }
-        }
-    }
-}
-
-// Alternative approach using Streamlit's internal API
-function switchToTabAlt(tabIndex) {
-    // Try to trigger Streamlit's tab switching
-    const event = new CustomEvent('streamlit:setComponentValue', {
-        detail: {
-            key: 'tab_selection',
-            value: tabIndex
-        }
-    });
-    document.dispatchEvent(event);
-    scrollToTop();
-}
-
-// Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    // Add click handlers with multiple attempts
-    setTimeout(() => {
-        const navButtons = document.querySelectorAll('.quick-nav button');
-        navButtons.forEach((button, index) => {
-            button.addEventListener('click', () => switchToTab(index));
-        });
-    }, 1000);
-});
 </script>
 """, unsafe_allow_html=True)
 
@@ -312,70 +249,83 @@ def initialize_components():
 
 components = initialize_components()
 
+# Initialize session state for tab control
+if 'active_tab' not in st.session_state:
+    st.session_state.active_tab = 0
+
 # Header Section
 st.markdown('<h1 class="section-header">FIBO BrandGuard</h1>', unsafe_allow_html=True)
 st.markdown('<p class="section-subtext">Governed JSON-native image generation with Bria FIBO for brand-safe, auditable visuals.</p>', unsafe_allow_html=True)
 
-# Floating Navigation Components
+# Floating Navigation using Streamlit components
 st.markdown("""
-<div class="quick-nav">
-    <button onclick="switchToTab(0)" onmousedown="switchToTab(0)" title="Generate Images">🎨 Generate</button>
-    <button onclick="switchToTab(1)" onmousedown="switchToTab(1)" title="Audit Log">📋 Audit Log</button>
-    <button onclick="switchToTab(2)" onmousedown="switchToTab(2)" title="About">ℹ️ About</button>
-</div>
+<style>
+.floating-nav {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 999;
+    background: rgba(31, 41, 55, 0.95);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    border: 1px solid #374151;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+    min-width: 150px;
+}
+</style>
+""", unsafe_allow_html=True)
 
+# Create the floating navigation container
+with st.container():
+    st.markdown('<div class="floating-nav">', unsafe_allow_html=True)
+    
+    # Navigation buttons
+    if st.button("🎨 Generate Images", key="nav_generate", use_container_width=True):
+        # Use JavaScript to click the actual tab
+        st.markdown("""
+        <script>
+        setTimeout(() => {
+            const tabs = document.querySelectorAll('[data-testid="stTabs"] button');
+            if (tabs[0]) {
+                tabs[0].click();
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            }
+        }, 100);
+        </script>
+        """, unsafe_allow_html=True)
+    
+    if st.button("📋 Audit Log", key="nav_audit", use_container_width=True):
+        st.markdown("""
+        <script>
+        setTimeout(() => {
+            const tabs = document.querySelectorAll('[data-testid="stTabs"] button');
+            if (tabs[1]) {
+                tabs[1].click();
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            }
+        }, 100);
+        </script>
+        """, unsafe_allow_html=True)
+    
+    if st.button("ℹ️ About", key="nav_about", use_container_width=True):
+        st.markdown("""
+        <script>
+        setTimeout(() => {
+            const tabs = document.querySelectorAll('[data-testid="stTabs"] button');
+            if (tabs[2]) {
+                tabs[2].click();
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            }
+        }, 100);
+        </script>
+        """, unsafe_allow_html=True)
+    
+    st.markdown('</div>', unsafe_allow_html=True)
+
+# Back to top button
+st.markdown("""
 <button class="back-to-top" onclick="scrollToTop()" title="Back to Top">↑</button>
-
-<script>
-// Delayed initialization to ensure Streamlit is ready
-setTimeout(function() {
-    // Function to switch tabs with multiple fallback strategies
-    window.switchToTabImmediate = function(tabIndex) {
-        console.log('Attempting to switch to tab:', tabIndex);
-        
-        // Strategy 1: Look for Streamlit tab buttons
-        let tabButtons = document.querySelectorAll('[data-testid="stTabs"] button[role="tab"]');
-        
-        if (tabButtons.length === 0) {
-            // Strategy 2: Alternative selector
-            tabButtons = document.querySelectorAll('div[data-testid="stTabs"] button');
-        }
-        
-        if (tabButtons.length === 0) {
-            // Strategy 3: Look for any buttons in tabs container
-            const tabsContainer = document.querySelector('[data-testid="stTabs"]');
-            if (tabsContainer) {
-                tabButtons = tabsContainer.querySelectorAll('button');
-            }
-        }
-        
-        if (tabButtons.length > tabIndex) {
-            console.log('Found tab buttons, clicking index:', tabIndex);
-            tabButtons[tabIndex].click();
-            setTimeout(() => scrollToTop(), 200);
-        } else {
-            console.log('Tab buttons not found, trying text-based search');
-            // Strategy 4: Find by text content
-            const tabTexts = ['Generate Images', 'Audit Log', 'About'];
-            const allButtons = document.querySelectorAll('button');
-            
-            for (const button of allButtons) {
-                if (button.textContent.trim() === tabTexts[tabIndex]) {
-                    console.log('Found tab by text:', tabTexts[tabIndex]);
-                    button.click();
-                    setTimeout(() => scrollToTop(), 200);
-                    break;
-                }
-            }
-        }
-    };
-    
-    // Override the global function
-    window.switchToTab = window.switchToTabImmediate;
-    
-    console.log('Navigation functions initialized');
-}, 2000);
-</script>
 """, unsafe_allow_html=True)
 
 # Status Pills
@@ -489,10 +439,26 @@ with st.sidebar:
         approval_rate = stats.get("approval_rate", 0)
         st.metric("Approval Rate", f"{stats['approval_rate']:.1f}%")
 
-# Main content area
-tab1, tab2, tab3 = st.tabs(["Generate Images", "Audit Log", "About"])
+# Main content area - controlled by session state
+tab_names = ["Generate Images", "Audit Log", "About"]
+selected_tab = st.session_state.active_tab
 
-with tab1:
+# Display tabs but control with session state
+tab1, tab2, tab3 = st.tabs(tab_names)
+
+# Always show the selected tab content
+if selected_tab == 0:
+    with tab1:
+        display_generate_tab()
+elif selected_tab == 1:
+    with tab2:
+        display_audit_tab()
+elif selected_tab == 2:
+    with tab3:
+        display_about_tab()
+
+# Function definitions for tab content
+def display_generate_tab():
     st.markdown('<h2 class="section-header">Create a Brand-Safe Prompt</h2>', unsafe_allow_html=True)
     st.markdown('<p class="section-subtext">Design your prompt with enterprise governance and compliance built-in.</p>', unsafe_allow_html=True)
     
