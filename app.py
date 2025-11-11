@@ -165,53 +165,6 @@ st.markdown("""
         transform: translateY(-2px);
         box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
     }
-    
-    /* Quick Navigation Floating Menu */
-    .quick-nav {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: rgba(31, 41, 55, 0.95);
-        border-radius: 0.75rem;
-        padding: 0.75rem;
-        border: 1px solid #374151;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-        z-index: 1000;
-        backdrop-filter: blur(8px);
-        min-width: 140px;
-    }
-    
-    .quick-nav button {
-        display: block;
-        width: 100%;
-        background: transparent;
-        color: #9ca3af;
-        border: none;
-        padding: 0.75rem;
-        margin: 0.25rem 0;
-        border-radius: 0.375rem;
-        cursor: pointer;
-        transition: all 0.2s;
-        font-size: 0.875rem;
-        text-align: left;
-        font-family: inherit;
-    }
-    
-    .quick-nav button:hover {
-        background: #374151;
-        color: #3b82f6;
-        transform: translateX(2px);
-    }
-    
-    .quick-nav button:active {
-        background: #4b5563;
-        transform: translateX(4px);
-    }
-    
-    .quick-nav button.active {
-        background: #3b82f6;
-        color: white;
-    }
 </style>
 
 <script>
@@ -253,73 +206,7 @@ components = initialize_components()
 st.markdown('<h1 class="section-header">FIBO BrandGuard</h1>', unsafe_allow_html=True)
 st.markdown('<p class="section-subtext">Governed JSON-native image generation with Bria FIBO for brand-safe, auditable visuals.</p>', unsafe_allow_html=True)
 
-# Floating Navigation using Streamlit components
-st.markdown("""
-<style>
-.floating-nav {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 999;
-    background: rgba(31, 41, 55, 0.95);
-    border-radius: 0.75rem;
-    padding: 1rem;
-    border: 1px solid #374151;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(8px);
-    min-width: 150px;
-}
-</style>
-""", unsafe_allow_html=True)
-
-# Create the floating navigation container
-with st.container():
-    st.markdown('<div class="floating-nav">', unsafe_allow_html=True)
-    
-    # Navigation buttons
-    if st.button("🎨 Generate Images", key="nav_generate", use_container_width=True):
-        # Use JavaScript to click the actual tab
-        st.markdown("""
-        <script>
-        setTimeout(() => {
-            const tabs = document.querySelectorAll('[data-testid="stTabs"] button');
-            if (tabs[0]) {
-                tabs[0].click();
-                window.scrollTo({top: 0, behavior: 'smooth'});
-            }
-        }, 100);
-        </script>
-        """, unsafe_allow_html=True)
-    
-    if st.button("📋 Audit Log", key="nav_audit", use_container_width=True):
-        st.markdown("""
-        <script>
-        setTimeout(() => {
-            const tabs = document.querySelectorAll('[data-testid="stTabs"] button');
-            if (tabs[1]) {
-                tabs[1].click();
-                window.scrollTo({top: 0, behavior: 'smooth'});
-            }
-        }, 100);
-        </script>
-        """, unsafe_allow_html=True)
-    
-    if st.button("ℹ️ About", key="nav_about", use_container_width=True):
-        st.markdown("""
-        <script>
-        setTimeout(() => {
-            const tabs = document.querySelectorAll('[data-testid="stTabs"] button');
-            if (tabs[2]) {
-                tabs[2].click();
-                window.scrollTo({top: 0, behavior: 'smooth'});
-            }
-        }, 100);
-        </script>
-        """, unsafe_allow_html=True)
-    
-    st.markdown('</div>', unsafe_allow_html=True)
-
-# Back to top button
+# Back to top button only
 st.markdown("""
 <button class="back-to-top" onclick="scrollToTop()" title="Back to Top">↑</button>
 """, unsafe_allow_html=True)
