@@ -249,10 +249,6 @@ def initialize_components():
 
 components = initialize_components()
 
-# Initialize session state for tab control
-if 'active_tab' not in st.session_state:
-    st.session_state.active_tab = 0
-
 # Header Section
 st.markdown('<h1 class="section-header">FIBO BrandGuard</h1>', unsafe_allow_html=True)
 st.markdown('<p class="section-subtext">Governed JSON-native image generation with Bria FIBO for brand-safe, auditable visuals.</p>', unsafe_allow_html=True)
@@ -439,26 +435,10 @@ with st.sidebar:
         approval_rate = stats.get("approval_rate", 0)
         st.metric("Approval Rate", f"{stats['approval_rate']:.1f}%")
 
-# Main content area - controlled by session state
-tab_names = ["Generate Images", "Audit Log", "About"]
-selected_tab = st.session_state.active_tab
+# Main content area
+tab1, tab2, tab3 = st.tabs(["Generate Images", "Audit Log", "About"])
 
-# Display tabs but control with session state
-tab1, tab2, tab3 = st.tabs(tab_names)
-
-# Always show the selected tab content
-if selected_tab == 0:
-    with tab1:
-        display_generate_tab()
-elif selected_tab == 1:
-    with tab2:
-        display_audit_tab()
-elif selected_tab == 2:
-    with tab3:
-        display_about_tab()
-
-# Function definitions for tab content
-def display_generate_tab():
+with tab1:
     st.markdown('<h2 class="section-header">Create a Brand-Safe Prompt</h2>', unsafe_allow_html=True)
     st.markdown('<p class="section-subtext">Design your prompt with enterprise governance and compliance built-in.</p>', unsafe_allow_html=True)
     
