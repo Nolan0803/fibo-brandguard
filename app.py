@@ -369,13 +369,7 @@ with tab1:
     st.markdown('<h2 class="section-header">Create a Brand-Safe Prompt</h2>', unsafe_allow_html=True)
     st.markdown('<p class="section-subtext">Design your prompt with enterprise governance and compliance built-in.</p>', unsafe_allow_html=True)
     
-    # Main prompt card
-    st.markdown("""
-    <div class="metric-card" style="margin-bottom: 2rem;">
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Use container to create the card effect
+    # Use container for the form
     with st.container():
         col1, col2 = st.columns([3, 1])
         
