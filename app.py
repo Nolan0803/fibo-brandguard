@@ -34,6 +34,24 @@ st.markdown("""
         padding-bottom: 2rem;
     }
     
+    /* Header tagline styling */
+    .header-tagline {
+        color: #9ca3af;
+        font-size: 0.95rem;
+        text-align: center;
+        margin: 0.75rem 0 1.5rem 0;
+        font-weight: 400;
+        letter-spacing: 0.5px;
+    }
+    
+    /* Subtle divider */
+    .section-divider {
+        height: 1px;
+        background: linear-gradient(90deg, transparent 0%, #374151 50%, transparent 100%);
+        margin: 2rem 0;
+        opacity: 0.6;
+    }
+    
     /* Status pills */
     .status-pill {
         display: inline-block;
@@ -45,7 +63,7 @@ st.markdown("""
     }
     
     .status-success {
-        background-color: #059669;
+        background-color: #10b981;
         color: white;
     }
     
@@ -59,87 +77,200 @@ st.markdown("""
         color: white;
     }
     
-    /* Cards */
+    /* Enhanced metric cards with glow borders */
     .metric-card {
         background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
-        padding: 1.5rem;
-        border-radius: 0.75rem;
-        border: 1px solid #374151;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-        margin-bottom: 1rem;
+        padding: 1.75rem;
+        border-radius: 0.875rem;
+        border: 1px solid #3b82f6;
+        box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(59, 130, 246, 0.1);
+        margin-bottom: 1.5rem;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .metric-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(16, 185, 129, 0.05) 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .metric-card:hover::before {
+        opacity: 1;
+    }
+    
+    .metric-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(59, 130, 246, 0.2);
+        border-color: #10b981;
     }
     
     .metric-card h3 {
         color: #3b82f6;
-        margin-bottom: 0.5rem;
-        font-size: 1.125rem;
-        font-weight: 600;
+        margin-bottom: 0.75rem;
+        font-size: 1.2rem;
+        font-weight: 700;
+        position: relative;
+        z-index: 1;
     }
     
     .metric-card p {
         color: #d1d5db;
-        margin: 0;
-        font-size: 0.875rem;
+        margin: 0.25rem 0;
+        font-size: 0.9rem;
+        position: relative;
+        z-index: 1;
     }
     
-    /* Primary button styling */
+    /* Primary button styling with enhanced animations */
     .stButton > button[kind="primary"] {
-        background: linear-gradient(135deg, #3b82f6 0%, #059669 100%);
+        background: linear-gradient(135deg, #3b82f6 0%, #10b981 100%);
         border: none;
-        border-radius: 0.5rem;
-        padding: 0.75rem 2rem;
-        font-weight: 600;
-        transition: all 0.2s;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        border-radius: 0.75rem;
+        padding: 0.875rem 2.5rem;
+        font-weight: 700;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px -3px rgba(59, 130, 246, 0.4);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
     
     .stButton > button[kind="primary"]:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.4);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px -5px rgba(59, 130, 246, 0.6), 0 0 20px rgba(16, 185, 129, 0.3);
+        background: linear-gradient(135deg, #2563eb 0%, #059669 100%);
     }
     
-    /* Generated image cards */
+    /* Enhanced generated image cards */
     .image-card {
-        background: #1f2937;
-        border-radius: 0.75rem;
-        padding: 1rem;
+        background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+        border-radius: 1rem;
+        padding: 1.25rem;
         border: 1px solid #374151;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-        margin-bottom: 1rem;
+        box-shadow: 0 6px 20px -6px rgba(0, 0, 0, 0.4);
+        margin-bottom: 1.5rem;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .image-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.03) 0%, rgba(16, 185, 129, 0.03) 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .image-card:hover::before {
+        opacity: 1;
+    }
+    
+    .image-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px -8px rgba(0, 0, 0, 0.5);
     }
     
     .image-card img {
-        border-radius: 0.5rem;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        position: relative;
+        z-index: 1;
     }
     
-    /* Section headers */
+    .image-card h4 {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .image-caption {
+        color: #9ca3af;
+        font-size: 0.85rem;
+        text-align: center;
+        margin-top: 0.75rem;
+        font-style: italic;
+        position: relative;
+        z-index: 1;
+    }
+    
+    /* Section headers with left alignment */
     .section-header {
         color: #3b82f6;
-        font-size: 1.5rem;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
+        font-size: 1.75rem;
+        font-weight: 800;
+        margin-bottom: 0.75rem;
         padding-bottom: 0.5rem;
         border-bottom: 2px solid #374151;
+        text-align: left;
+        letter-spacing: -0.025em;
     }
     
     .section-subtext {
         color: #9ca3af;
-        font-size: 0.875rem;
-        margin-bottom: 1.5rem;
+        font-size: 0.95rem;
+        margin-bottom: 1.75rem;
+        text-align: left;
+        line-height: 1.6;
     }
     
-    /* Sidebar styling */
+    .section-subtext-center {
+        color: #9ca3af;
+        font-size: 0.95rem;
+        margin-bottom: 1.75rem;
+        text-align: center;
+        line-height: 1.6;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    /* Enhanced sidebar styling */
     .css-1d391kg {
-        background-color: #1f2937;
+        background: rgba(31, 41, 55, 0.8);
+        backdrop-filter: blur(10px);
+        border-right: 1px solid rgba(59, 130, 246, 0.1);
     }
     
-    /* Metrics styling */
+    /* Sidebar headers with bolder typography */
+    .sidebar-header {
+        font-weight: 700 !important;
+        font-size: 1.1rem !important;
+        color: #3b82f6 !important;
+        margin-bottom: 1rem !important;
+    }
+    
+    .sidebar-subheader {
+        font-weight: 600 !important;
+        font-size: 1rem !important;
+        color: #10b981 !important;
+        margin: 1.5rem 0 0.75rem 0 !important;
+    }
+    
+    /* Enhanced metrics styling */
     .metric-container {
-        background: #1f2937;
-        padding: 1rem;
-        border-radius: 0.5rem;
+        background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+        padding: 1.25rem;
+        border-radius: 0.75rem;
         border: 1px solid #374151;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
+    }
+    
+    .metric-container:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
     }
     
     /* Floating Back to Top Button */
@@ -147,23 +278,23 @@ st.markdown("""
         position: fixed;
         bottom: 20px;
         right: 20px;
-        background: linear-gradient(135deg, #3b82f6 0%, #059669 100%);
+        background: linear-gradient(135deg, #3b82f6 0%, #10b981 100%);
         color: white;
         border: none;
         border-radius: 50%;
-        width: 50px;
-        height: 50px;
-        font-size: 18px;
+        width: 55px;
+        height: 55px;
+        font-size: 20px;
         cursor: pointer;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
         transition: all 0.3s ease;
         z-index: 1000;
         display: none;
     }
     
     .back-to-top:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(16, 185, 129, 0.4);
     }
 </style>
 
@@ -213,7 +344,7 @@ with col2:
         
         for logo_path in logo_paths:
             if os.path.exists(logo_path):
-                st.image(logo_path, width=450)
+                st.image(logo_path, width=360)  # Reduced by 20% from 450px
                 logo_displayed = True
                 # Debug info (can be removed later)
                 # st.success(f"Logo loaded from: {logo_path}")
@@ -226,7 +357,7 @@ with col2:
                 <h1 style="color: #3b82f6; font-size: 3rem; margin: 0; font-weight: 700;">
                     🛡️ FIBO BrandGuard
                 </h1>
-                <p style="color: #059669; font-size: 1.2rem; margin: 0.5rem 0 0 0; font-weight: 500;">
+                <p style="color: #10b981; font-size: 1.2rem; margin: 0.5rem 0 0 0; font-weight: 500;">
                     Controlled Visuals. Trusted Brands
                 </p>
             </div>
@@ -238,13 +369,16 @@ with col2:
             <h1 style="color: #3b82f6; font-size: 3rem; margin: 0; font-weight: 700;">
                 �️ FIBO BrandGuard
             </h1>
-            <p style="color: #059669; font-size: 1.2rem; margin: 0.5rem 0 0 0; font-weight: 500;">
+            <p style="color: #10b981; font-size: 1.2rem; margin: 0.5rem 0 0 0; font-weight: 500;">
                 Controlled Visuals. Trusted Brands
             </p>
         </div>
         """, unsafe_allow_html=True)
+
+# Add tagline below logo
+st.markdown('<p class="header-tagline">Enterprise AI governance that scales with your brand vision</p>', unsafe_allow_html=True)
         
-st.markdown('<p class="section-subtext" style="text-align: center; margin-top: 1rem;">Governed JSON-native image generation with Bria FIBO for brand-safe, auditable visuals.</p>', unsafe_allow_html=True)
+st.markdown('<p class="section-subtext-center">Governed JSON-native image generation with Bria FIBO for brand-safe, auditable visuals.</p>', unsafe_allow_html=True)
 
 # Back to top button only
 st.markdown("""
@@ -277,16 +411,17 @@ with col2:
 with col3:
     st.markdown('<span class="status-pill status-success">Audit Logging Active</span>', unsafe_allow_html=True)
 
-st.markdown("<br>", unsafe_allow_html=True)
+# Add subtle divider
+st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
 
-# Summary Cards Strip
+# Summary Cards Strip with updated names
 col1, col2, col3 = st.columns(3)
 
 with col1:
     policy_summary = components["policy_engine"].get_policy_summary()
     st.markdown(f"""
     <div class="metric-card">
-        <h3>Brand Policies Active</h3>
+        <h3>Active Policy Framework</h3>
         <p><strong>{policy_summary['brand_name']}</strong></p>
         <p>{len(policy_summary.get('policies', {}).get('allowed_themes', []))} allowed themes</p>
         <p>{len(policy_summary.get('policies', {}).get('prohibited_content', []))} restrictions</p>
@@ -304,7 +439,7 @@ with col2:
     
     st.markdown(f"""
     <div class="metric-card">
-        <h3>Governance Mode</h3>
+        <h3>Governance Engine</h3>
         <p><strong>{mode}</strong></p>
         <p>Model: {model_info}</p>
         <p>JSON-native prompting</p>
@@ -315,7 +450,7 @@ with col3:
     stats = components["audit_log"].get_statistics()
     st.markdown(f"""
     <div class="metric-card">
-        <h3>Activity Summary</h3>
+        <h3>Operational Metrics</h3>
         <p><strong>{stats["generation_requests"]}</strong> requests</p>
         <p>{stats["approval_rate"]:.1f}% approval rate</p>
         <p>{stats["policy_violations"]} violations</p>
@@ -326,11 +461,11 @@ st.markdown("<br>", unsafe_allow_html=True)
 
 # Sidebar for brand policy information
 with st.sidebar:
-    st.header("Brand Policies")
+    st.markdown('<h2 class="sidebar-header">Brand Policies</h2>', unsafe_allow_html=True)
     
     policy_summary = components["policy_engine"].get_policy_summary()
     
-    st.subheader(f"**Brand:** {policy_summary['brand_name']}")
+    st.markdown(f'<h3 class="sidebar-subheader">Brand: {policy_summary["brand_name"]}</h3>', unsafe_allow_html=True)
     
     with st.expander("Allowed Themes", expanded=False):
         themes = policy_summary.get("policies", {}).get("allowed_themes", [])
@@ -349,8 +484,8 @@ with st.sidebar:
     
     st.divider()
     
-    # Audit Log Statistics
-    st.subheader("Audit Statistics")
+    # Governance Metrics
+    st.markdown('<h3 class="sidebar-subheader">Governance Metrics</h3>', unsafe_allow_html=True)
     stats = components["audit_log"].get_statistics()
     
     col1, col2 = st.columns(2)
@@ -367,7 +502,7 @@ tab1, tab2, tab3 = st.tabs(["Generate Images", "Audit Log", "About"])
 
 with tab1:
     st.markdown('<h2 class="section-header">Create a Brand-Safe Prompt</h2>', unsafe_allow_html=True)
-    st.markdown('<p class="section-subtext">Design your prompt with enterprise governance and compliance built-in.</p>', unsafe_allow_html=True)
+    st.markdown('<p class="section-subtext">Transform your creative vision into governed prompts that align with enterprise brand standards and compliance requirements.</p>', unsafe_allow_html=True)
     
     # Use container for the form
     with st.container():
@@ -435,9 +570,12 @@ with tab1:
         
         # Generate button and view JSON
         st.markdown("<br>", unsafe_allow_html=True)
+        
+        # Center-aligned CTA with enhanced styling
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            generate_clicked = st.button("Generate Governed Images", type="primary", use_container_width=True)
+            st.markdown('<p class="section-subtext-center" style="margin-bottom: 1rem; font-weight: 500;">Ready to generate brand-compliant visuals?</p>', unsafe_allow_html=True)
+            generate_clicked = st.button("🚀 Generate Governed Images", type="primary", use_container_width=True)
         
         # View JSON Prompt link
         if scene:
@@ -621,9 +759,10 @@ with tab1:
                                 if "image" in result and result["image"]:
                                     st.image(
                                         result["image"], 
-                                        caption=f"Variant {result['variant_id']} — Compliant",
                                         use_column_width=True
                                     )
+                                    # Add custom caption
+                                    st.markdown(f'<p class="image-caption">Variant {result["variant_id"]} — Enterprise Compliant</p>', unsafe_allow_html=True)
                                 
                                 # Status indicator
                                 if result.get("status") == "success":
@@ -684,7 +823,7 @@ with tab2:
     with col2:
         st.markdown(f"""
         <div class="metric-container">
-            <h4 style="color: #059669; margin: 0;">Compliant %</h4>
+            <h4 style="color: #10b981; margin: 0;">Compliant %</h4>
             <p style="font-size: 1.5rem; font-weight: bold; margin: 0.25rem 0;">{stats["approval_rate"]:.1f}%</p>
         </div>
         """, unsafe_allow_html=True)
