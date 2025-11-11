@@ -215,6 +215,8 @@ with col2:
             if os.path.exists(logo_path):
                 st.image(logo_path, width=450)
                 logo_displayed = True
+                # Debug info (can be removed later)
+                # st.success(f"Logo loaded from: {logo_path}")
                 break
         
         if not logo_displayed:
