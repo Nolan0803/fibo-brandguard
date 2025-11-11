@@ -89,7 +89,7 @@ with st.sidebar:
     with col2:
         st.metric("Violations", stats["policy_violations"])
         approval_rate = stats.get("approval_rate", 0)
-                st.metric("Approval Rate", f"{stats['approval_rate']:.1f}%")
+        st.metric("Approval Rate", f"{stats['approval_rate']:.1f}%")
 
 # Main content area
 tab1, tab2, tab3 = st.tabs(["🎨 Generate Images", "📜 Audit Log", "ℹ️ About"])
