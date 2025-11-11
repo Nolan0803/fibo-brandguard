@@ -323,6 +323,18 @@ st.markdown("""
         font-weight: 600 !important;
         font-size: 0.95rem !important;
     }
+    
+    /* Remove column containers visual artifacts */
+    .element-container .stHorizontalBlock {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+    
+    /* Ensure clean spacing between elements */
+    .stMarkdown {
+        margin-bottom: 1rem;
+    }
 </style>
 
 <script>
@@ -530,6 +542,9 @@ tab1, tab2, tab3 = st.tabs(["Generate Images", "Audit Log", "About"])
 with tab1:
     st.subheader("Create a Brand-Safe Prompt")
     st.markdown("Transform your creative vision into governed prompts that align with enterprise brand standards.")
+    
+    # Add clear visual separator
+    st.markdown("---")
     
     # Scene Description - full width
     scene = st.text_area(
