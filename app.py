@@ -202,9 +202,47 @@ def initialize_components():
 
 components = initialize_components()
 
-# Header Section
-st.markdown('<h1 class="section-header">FIBO BrandGuard</h1>', unsafe_allow_html=True)
-st.markdown('<p class="section-subtext">Governed JSON-native image generation with Bria FIBO for brand-safe, auditable visuals.</p>', unsafe_allow_html=True)
+# Header Section with Logo
+col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
+    try:
+        # Try to display the logo from various possible locations
+        import os
+        logo_paths = ["assets/logo.png", "logo.png", "images/logo.png"]
+        logo_displayed = False
+        
+        for logo_path in logo_paths:
+            if os.path.exists(logo_path):
+                st.image(logo_path, width=450)
+                logo_displayed = True
+                break
+        
+        if not logo_displayed:
+            # Fallback to professional text header
+            st.markdown("""
+            <div style="text-align: center; padding: 2rem 0;">
+                <h1 style="color: #3b82f6; font-size: 3rem; margin: 0; font-weight: 700;">
+                    🛡️ FIBO BrandGuard
+                </h1>
+                <p style="color: #059669; font-size: 1.2rem; margin: 0.5rem 0 0 0; font-weight: 500;">
+                    Controlled Visuals. Trusted Brands
+                </p>
+            </div>
+            """, unsafe_allow_html=True)
+    except Exception as e:
+        # Fallback to professional text header
+        st.markdown("""
+        <div style="text-align: center; padding: 2rem 0;">
+            <h1 style="color: #3b82f6; font-size: 3rem; margin: 0; font-weight: 700;">
+                �️ FIBO BrandGuard
+            </h1>
+            <p style="color: #059669; font-size: 1.2rem; margin: 0.5rem 0 0 0; font-weight: 500;">
+                Controlled Visuals. Trusted Brands
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+st.markdown('<p class="section-subtext" style="text-align: center; margin-top: 1rem;">Governed JSON-native image generation with Bria FIBO for brand-safe, auditable visuals.</p>', unsafe_allow_html=True)
 
 # Back to top button only
 st.markdown("""
