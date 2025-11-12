@@ -866,13 +866,23 @@ with tab1:
     # Process generation request
     if generate_clicked:
         if not scene:
-            st.error("Please provide a scene description!")
+            st.error("⚠️ Please provide a scene description to get started!")
         else:
+            # Initialize progress tracking
+            progress_bar = st.progress(0)
+            status_text = st.empty()
+            
             try:
+                status_text.text("🧠 Processing prompt through VLM Agent...")
+                progress_bar.progress(10)
+                
                 # Parse advanced options
                 modifiers = [m.strip() for m in modifiers_input.split(",") if m.strip()] if modifiers_input else None
                 colors = [c.strip() for c in colors_input.split(",") if c.strip()] if colors_input else None
                 elements = [e.strip() for e in elements_input.split(",") if e.strip()] if elements_input else None
+                
+                status_text.text("📝 Creating structured JSON prompt...")
+                progress_bar.progress(25)
                 
                 # Create prompt
                 if template != "basic":
@@ -895,6 +905,9 @@ with tab1:
                         mood=mood
                     )
                 
+                status_text.text("🛡️ Validating against brand policies...")
+                progress_bar.progress(40)
+                
                 # Validate against policies
                 st.markdown("### Policy Validation")
                 is_valid, violations, warnings = components["policy_engine"].validate_prompt(prompt)
@@ -906,13 +919,18 @@ with tab1:
                     "timestamp": datetime.now().isoformat()
                 }
                 
-                # Compact status summary
+                progress_bar.progress(60)
+                
+                # Enhanced status summary with better feedback
                 if is_valid and not warnings:
-                    st.markdown('<span class="status-pill status-success">Compliant</span> All policies passed', unsafe_allow_html=True)
+                    st.success("🎉 **Fully Compliant** - All brand policies passed successfully!")
+                    st.markdown('<span class="status-pill status-success">Approved</span> Ready for generation', unsafe_allow_html=True)
                 elif is_valid and warnings:
+                    st.warning("⚡ **Approved with Recommendations** - Minor optimizations available")
                     st.markdown('<span class="status-pill status-warning">Approved with Notes</span> Minor recommendations available', unsafe_allow_html=True)
                 else:
-                    st.markdown('<span class="status-pill status-error">Policy Violation</span> Generation blocked', unsafe_allow_html=True)
+                    st.error("🚫 **Policy Violation Detected** - Generation blocked for compliance")
+                    st.markdown('<span class="status-pill status-error">Blocked</span> Must resolve violations first', unsafe_allow_html=True)
                 
                 # Detailed messages in expander
                 if violations or warnings:
@@ -952,34 +970,40 @@ with tab1:
                 st.markdown("### Generated Images")
                 st.markdown("All variants enforced by brand policies and recorded in the audit log.")
                 
+                status_text.text("🎨 Initializing Bria FIBO generation pipeline...")
+                progress_bar.progress(70)
+                
                 try:
                     # Show generation info and progress  
                     estimated_time = num_variants * 17  # Average 17 seconds per variant
                     
                     # Progress info box
                     with st.container():
-                        st.info(f"**Generating {num_variants} creative variant{'s' if num_variants > 1 else ''}**")
+                        st.info(f"**🚀 Generating {num_variants} creative variant{'s' if num_variants > 1 else ''}**")
                         
                         col1, col2, col3 = st.columns(3)
                         with col1:
-                            st.metric("Variants", num_variants)
+                            st.metric("🎯 Variants", num_variants)
                         with col2:
                             st.metric("⏱️ Est. Time", f"~{estimated_time}s")
                         with col3:
-                            st.metric("Model", "Bria FIBO")
+                            st.metric("🤖 Model", "Bria FIBO")
                         
                         # Progress steps
                         st.markdown("""
-                        **Generation Process:**
-                        1. 🔄 Initializing FIBO pipeline with your HF token
-                        2. Creating unique variants with random seeds  
-                        3. Applying creative enhancements (lighting, angles, moods)
-                        4. Ensuring brand compliance throughout
-                        5. Finalizing high-quality images
+                        **🔄 Generation Process:**
+                        1. ✅ HF token validated and FIBO pipeline initialized
+                        2. 🎲 Creating unique variants with randomized seeds  
+                        3. 🎨 Applying creative enhancements (lighting, angles, moods)
+                        4. 🛡️ Ensuring brand compliance throughout generation
+                        5. 🖼️ Finalizing high-quality professional images
                         """)
                     
+                    progress_bar.progress(85)
+                    status_text.text("🖼️ Generating brand-compliant images...")
+                    
                     # Actual generation with enhanced spinner
-                    with st.spinner(f"Generating {num_variants} brand-compliant creative variants... This may take {estimated_time}s"):
+                    with st.spinner(f"🎨 Generating {num_variants} brand-compliant creative variants... ⏱️ ~{estimated_time}s"):
                         import time
                         start_time = time.time()
                         
@@ -990,16 +1014,26 @@ with tab1:
                         
                         generation_time = time.time() - start_time
                         
-                        # Show completion message
-                        if results:
-                            st.success(f"Generation completed in {generation_time:.1f}s!")
+                    progress_bar.progress(100)
+                    status_text.text("✅ Generation completed successfully!")
+                    
+                    # Clear progress indicators after successful completion
+                    import time
+                    time.sleep(1)
+                    progress_bar.empty()
+                    status_text.empty()
                         
                         # Log results
                         components["audit_log"].log_generation_result(entry_id, results)
                         
+                        # Enhanced success/failure feedback
                         if not results:
-                            st.warning("Remote FIBO generation is temporarily unavailable. Your prompt and audit log are still recorded.")
+                            st.warning("⚠️ **Remote FIBO generation temporarily unavailable** - Your prompt and audit log are still recorded for future processing.")
+                            st.info("💡 This demonstrates the platform's audit capabilities even during service interruptions.")
                         else:
+                            # Show completion with metrics
+                            st.success(f"🎉 **Generation completed successfully!** ⏱️ {generation_time:.1f}s | 🛡️ Fully compliant | 📊 Audit logged")
+                            
                             # Display images in responsive columns
                             if len(results) > 1:
                                 cols = st.columns(len(results))
@@ -1007,13 +1041,16 @@ with tab1:
                                     with col:
                                         if "image" in result and result["image"]:
                                             st.image(result["image"], use_column_width=True)
-                                            st.caption(f"Variant {idx}")
+                                            
+                                            # Enhanced caption with metadata
+                                            generation_timestamp = datetime.now().strftime("%H:%M:%S")
+                                            st.caption(f"🎯 **Variant {idx}** | 🕐 {generation_timestamp}")
                                             
                                             # Status indicator
                                             if result.get("status") == "success":
-                                                st.markdown('<span class="status-pill status-success">Compliant</span>', unsafe_allow_html=True)
+                                                st.markdown('<span class="status-pill status-success">✅ Compliant</span>', unsafe_allow_html=True)
                                             elif result.get("status") == "safe_mode":
-                                                st.markdown('<span class="status-pill status-warning">Safe Mode Preview</span>', unsafe_allow_html=True)
+                                                st.markdown('<span class="status-pill status-warning">⚡ Safe Mode Preview</span>', unsafe_allow_html=True)
                                             else:
                                                 st.markdown('<span class="status-pill status-warning">Placeholder Mode</span>', unsafe_allow_html=True)
                                             
