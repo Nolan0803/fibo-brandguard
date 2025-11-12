@@ -3,9 +3,14 @@ import json
 import io
 import time
 import random
+import logging
 from typing import List, Dict, Any, Optional
 from PIL import Image
 from huggingface_hub import InferenceClient
+
+# Configure logging for debugging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 # Load environment variables from .env file at startup
 from dotenv import load_dotenv
@@ -19,15 +24,17 @@ if not hf_token:
         import streamlit as st
         if hasattr(st, 'secrets') and 'HF_TOKEN' in st.secrets:
             hf_token = st.secrets["HF_TOKEN"]
-            print("✅ HuggingFace token loaded from Streamlit secrets")
+            logger.info("✅ HuggingFace token loaded from Streamlit secrets")
     except:
         pass
 
 if hf_token:
     if not hasattr(hf_token, '__name__'):  # Not from streamlit secrets
-        print("✅ HuggingFace token loaded successfully from .env")
+        logger.info("✅ HuggingFace token loaded successfully from .env")
+        logger.info(f"Token length: {len(hf_token)} characters")
+        logger.info(f"Token prefix: {hf_token[:10]}...")
 else:
-    print("❌ HF_TOKEN not found in .env file or Streamlit secrets. Please configure your HuggingFace token.")
+    logger.error("❌ HF_TOKEN not found in .env file or Streamlit secrets. Please configure your HuggingFace token.")
 
 def _to_pil_image(result):
     """
@@ -65,18 +72,21 @@ def _load_pipeline():
     """
     global _remote_client
     if _remote_client is not None:
+        logger.info("✅ Using existing remote client")
         return _remote_client
 
     if not HF_TOKEN:
-        # Keep logging so the app can show setup guidance
-        print("❌ No HF_TOKEN found. Set HF_TOKEN to your Hugging Face token.")
+        logger.error("❌ No HF_TOKEN found. Set HF_TOKEN to your Hugging Face token.")
         return None
 
     try:
+        logger.info("🔄 Initializing HuggingFace InferenceClient for briaai/FIBO...")
         _remote_client = InferenceClient("briaai/FIBO", token=HF_TOKEN)
+        logger.info("✅ Remote InferenceClient initialized successfully")
         return _remote_client
     except Exception as e:
-        print(f"❌ Failed to initialize remote InferenceClient: {e}")
+        logger.error(f"❌ Failed to initialize remote InferenceClient: {e}")
+        logger.error(f"Error type: {type(e).__name__}")
         _remote_client = None
         return None
 
@@ -197,12 +207,16 @@ def generate_images_from_json_prompt(json_prompt: dict, num_images: int = 1) -> 
 
     On any exception, log and return an empty list.
     """
+    logger.info(f"🎯 Starting image generation: {num_images} variants requested")
+    
     client = _load_pipeline()
     if client is None:
-        print("❌ Remote FIBO client not available (HF_TOKEN missing or init failed)")
+        logger.error("❌ Remote FIBO client not available (HF_TOKEN missing or init failed)")
         return []
 
     base_prompt_str = json.dumps(json_prompt, ensure_ascii=False)
+    logger.info(f"📝 Base prompt: {base_prompt_str[:100]}{'...' if len(base_prompt_str) > 100 else ''}")
+    
     images: List[Image.Image] = []
 
     for i in range(num_images):
@@ -214,25 +228,49 @@ def generate_images_from_json_prompt(json_prompt: dict, num_images: int = 1) -> 
             
             # Create variant prompt with creative additions
             variant_prompt = generate_variant_prompt(base_prompt_str, i + 1)
+            logger.info(f"🎨 Variant {i+1} prompt: {variant_prompt[:150]}{'...' if len(variant_prompt) > 150 else ''}")
+            logger.info(f"🎲 Using seed: {unique_seed}")
+            
+            # Log API call attempt
+            logger.info(f"📡 Making API call to HuggingFace for variant {i+1}...")
             
             # The InferenceClient text_to_image can return PIL.Image or bytes
             # Note: HuggingFace Inference API doesn't support seed parameter directly
             # but we'll use the varied prompts to create diversity
             response = client.text_to_image(prompt=variant_prompt)
             latency = time.time() - start
-
+            
+            logger.info(f"📡 API Response received in {latency:.2f}s")
+            logger.info(f"📡 Response type: {type(response)}")
+            
             # Use helper to handle different response types
             image = _to_pil_image(response)
             images.append(image)
-            print(f"✅ Remote FIBO variant {i+1} generated in {latency:.2f}s (seed: {unique_seed})")
+            logger.info(f"✅ Remote FIBO variant {i+1} generated successfully - Size: {image.size}")
+            
         except Exception as e:
-            print(f"❌ Remote generation error for variant {i+1}: {e}")
-            print(f"❌ Error type: {type(e).__name__}")
+            logger.error(f"❌ Remote generation error for variant {i+1}: {e}")
+            logger.error(f"❌ Error type: {type(e).__name__}")
+            
+            # Log detailed error information
             if hasattr(e, 'response'):
-                print(f"❌ Response status: {getattr(e.response, 'status_code', 'unknown')}")
+                status_code = getattr(e.response, 'status_code', 'unknown')
+                logger.error(f"❌ HTTP Status: {status_code}")
+                
+                # Try to get response text if available
+                try:
+                    response_text = getattr(e.response, 'text', 'No response text')
+                    logger.error(f"❌ Response text: {response_text}")
+                except:
+                    logger.error("❌ Could not get response text")
+                    
+            if hasattr(e, 'message'):
+                logger.error(f"❌ Error message: {e.message}")
+                
             # Continue with other variants instead of returning empty list
             continue
 
+    logger.info(f"🏁 Generation complete: {len(images)}/{num_images} images successfully generated")
     return images
 
 
@@ -314,8 +352,12 @@ class FIBOClient:
         Returns:
             List of image result dictionaries with PIL Images
         """
+        logger.info(f"🚀 FIBOClient.generate_images called with {num_variants} variants")
+        logger.info(f"📝 Input prompt: {prompt}")
+        
         # Generate unique seeds for each variant upfront
         variant_seeds = [random.randint(0, 9999999) for _ in range(num_variants)]
+        logger.info(f"🎲 Generated seeds: {variant_seeds}")
         
         # Call the new remote function
         images = generate_images_from_json_prompt(prompt, num_variants)
@@ -323,6 +365,7 @@ class FIBOClient:
         results: List[Dict[str, Any]] = []
 
         if images:  # Remote generation successful
+            logger.info(f"✅ Remote generation successful: {len(images)} images")
             for i, image in enumerate(images):
                 # Create variant prompt to show what was actually used
                 base_prompt_str = build_prompt_from_governed_json(prompt)
@@ -347,7 +390,9 @@ class FIBOClient:
                     }
                 }
                 results.append(result)
+                logger.info(f"📊 Variant {i+1} result created - Status: {result['status']}")
         else:  # Remote generation failed, show safe mode
+            logger.warning(f"⚠️ Remote generation failed, falling back to safe mode for {num_variants} variants")
             for i in range(num_variants):
                 safe_image = _create_safe_mode_image(prompt, i + 1)
                 result = {
@@ -367,7 +412,9 @@ class FIBOClient:
                     }
                 }
                 results.append(result)
+                logger.info(f"📊 Safe mode variant {i+1} created")
 
+        logger.info(f"🏁 generate_images returning {len(results)} results")
         return results
     
     def validate_setup(self) -> Dict[str, bool]:

@@ -3,317 +3,130 @@ FIBO BrandGuard - Streamlit Application
 A governed, JSON-native Bria FIBO image generation demo for the Bria Hackathon.
 Updated: Modern Enterprise Design
 """
-
 import streamlit as st
 import json
-import logging
 from datetime import datetime
 from vlm_agent import VLMAgent
 from policy_engine import PolicyEngine
 from fibo_client import FIBOClient
 from audit_log import AuditLog
-
-# Configure logging for debugging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
-
-
 # Page configuration
 st.set_page_config(
     page_title="FIBO BrandGuard",
     page_icon="🛡️",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="expanded"
 )
-
-# Enterprise-Grade Layout CSS
+# Modern Marketing-Focused CSS
 st.markdown("""
 <style>
-/* Global page configuration - full viewport usage */
+/* Modern App Foundation */
 .main .block-container {
-    max-width: 100% !important;
-    padding: 0.5rem 1rem !important;
-    margin: 0 !important;
+    padding: 0.5rem 1rem;
+    max-width: 100%;
     background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
     min-height: 100vh;
 }
-
-/* Remove ALL excessive spacing */
-.main .block-container > div {
-    margin-top: 0.25rem !important;
-    margin-bottom: 0.25rem !important;
+/* General spacing optimization */
+.stMarkdown {
+    margin-bottom: 0.5rem !important;
 }
-
-/* Prevent horizontal scrolling and use full width */
-html, body {
-    overflow-x: hidden;
-    margin: 0;
-    padding: 0;
-}
-
-/* Streamlit container optimization */
-.main {
-    padding: 0 !important;
-}
-
-/* Element containers - minimal spacing */
-.element-container {
-    margin: 0.2rem 0 !important;
-    padding: 0 !important;
-}
-
-/* Full width usage for all elements */
-.stMarkdown, .stSelectbox, .stTextArea, .stButton, .stColumns {
-    width: 100% !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-}
-
-/* Remove Streamlit default margins and spacing */
-.main .block-container .stMarkdown,
-.main .block-container .stSelectbox,
-.main .block-container .stTextArea,
-.main .block-container .stButton,
-.main .block-container .stColumns,
-.main .block-container .stMetric {
-    margin-bottom: 0.25rem !important;
-    padding: 0 !important;
-}
-
-/* Image optimization for better space usage */
-.main img {
-    width: 100% !important;
-    height: auto !important;
-    border-radius: 8px !important;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
-}
-
-/* Streamlit columns optimization */
-.stColumns > div[data-testid="column"] {
-    padding: 0 0.25rem !important;
-}
-
-.stColumns > div[data-testid="column"]:first-child {
-    padding-left: 0 !important;
-}
-
-.stColumns > div[data-testid="column"]:last-child {
-    padding-right: 0 !important;
-}
-
-/* Sidebar - proportional but not excessive */
-[data-testid="stSidebar"] {
-    min-width: 240px;
-    max-width: 240px;
-}
-
-[data-testid="stSidebar"] .block-container {
-    padding: 1rem 0.75rem !important;
-}
-
-/* Enhanced Tab Styling - better separation and visual clarity */
-.stTabs [data-baseweb="tab-list"] {
-    gap: 2px;
-    background: rgba(15, 23, 42, 0.9);
-    border: 1px solid rgba(59, 130, 246, 0.3);
-    border-radius: 12px;
-    padding: 0.5rem;
-    margin: 0.5rem 0 1rem 0 !important;
-    width: 100%;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-/* Individual tab styling */
-.stTabs [data-baseweb="tab"] {
-    background: rgba(30, 41, 59, 0.6) !important;
-    border: 1px solid rgba(71, 85, 105, 0.4) !important;
-    border-radius: 8px !important;
-    padding: 0.75rem 1.5rem !important;
-    margin: 0 1px !important;
-    color: #94a3b8 !important;
-    font-weight: 600 !important;
-    font-size: 0.9rem !important;
-    transition: all 0.3s ease !important;
-    backdrop-filter: blur(10px) !important;
-}
-
-/* Active tab styling */
-.stTabs [data-baseweb="tab"][aria-selected="true"] {
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
-    border: 1px solid rgba(59, 130, 246, 0.8) !important;
-    color: #ffffff !important;
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
-    transform: translateY(-1px) !important;
-}
-
-/* Tab hover effects */
-.stTabs [data-baseweb="tab"]:hover:not([aria-selected="true"]) {
-    background: rgba(51, 65, 85, 0.8) !important;
-    border-color: rgba(59, 130, 246, 0.5) !important;
-    color: #e2e8f0 !important;
-}
-
-/* Tab panel with better spacing */
+/* Tab content spacing */
 .stTabs [data-baseweb="tab-panel"] {
-    background: rgba(30, 41, 59, 0.3);
-    border: 1px solid rgba(59, 130, 246, 0.2);
-    border-radius: 12px;
-    padding: 1rem !important;
-    margin-top: 0.5rem !important;
-    backdrop-filter: blur(10px);
-    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding-top: 0.75rem !important;
 }
-
-/* Additional visual separation for tab content */
-.stTabs [data-baseweb="tab-panel"] > div {
-    border-left: 3px solid rgba(59, 130, 246, 0.3);
-    padding-left: 1rem;
-    margin-left: 0.5rem;
-}
-
-/* Tab panel headers get special treatment */
-.stTabs [data-baseweb="tab-panel"] h1,
-.stTabs [data-baseweb="tab-panel"] h2,
-.stTabs [data-baseweb="tab-panel"] h3,
-.stTabs [data-baseweb="tab-panel"] h4 {
-    border-bottom: 2px solid rgba(59, 130, 246, 0.3);
-    padding-bottom: 0.5rem;
-    margin-bottom: 1rem;
-    color: #e2e8f0 !important;
-}
-
-/* Compact form elements - maximize content density */
-.stTextArea > label, .stSelectbox > label, .stSlider > label {
-    margin-bottom: 0.1rem !important;
-    font-size: 0.85rem !important;
-}
-
-.stTextArea, .stSelectbox, .stSlider {
-    margin-bottom: 0.3rem !important;
-}
-
-.stButton {
-    margin: 0.2rem 0 !important;
-}
-
-/* Tight column spacing */
-.stColumn > div {
-    padding: 0 0.25rem !important;
-}
-
+/* Better text alignment and spacing */
 .stMetric {
     text-align: center !important;
 }
-
 .stMetric > div {
     justify-content: center !important;
 }
-
-/* Professional expander styling */
+/* Compact expander styling */
 .streamlit-expander {
-    border: 1px solid rgba(59, 130, 246, 0.2) !important;
-    border-radius: 8px !important;
+    border: none !important;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
 }
-
-/* Clean column spacing - utilize full width */
+/* Better column spacing */
 .stColumn > div {
-    padding: 0 0.25rem !important;
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
 }
-
-/* Remove excessive column margins */
-.stColumn:first-child > div {
-    padding-left: 0 !important;
-}
-
-.stColumn:last-child > div {
-    padding-right: 0 !important;
-}
-
-/* Hero Section - compact but impactful */
+/* Hero Section Styling */
 .hero-section {
     background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-    padding: 1.5rem 0.75rem 1rem 0.75rem;
+    padding: 1.5rem 2rem 1rem 2rem;
     text-align: center;
     border-radius: 0 0 16px 16px;
-    margin: -0.5rem -1rem 1rem -1rem;
+    margin-bottom: 1.5rem;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
-
 .hero-logo {
-    max-width: 180px;
-    margin: 0 auto 0.75rem;
+    max-width: 200px;
+    margin: 0 auto 1rem;
     filter: drop-shadow(0 4px 8px rgba(59, 130, 246, 0.3));
 }
-
 .hero-title {
-    font-size: 2rem;
+    font-size: 2.2rem;
     font-weight: 700;
     background: linear-gradient(135deg, #3b82f6, #10b981);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.5rem;
     line-height: 1.1;
 }
-
 .hero-subtitle {
-    font-size: 0.95rem;
+    font-size: 1rem;
     color: #94a3b8;
     font-weight: 500;
-    margin-bottom: 0.75rem;
+    margin-bottom: 1rem;
     max-width: 500px;
     margin-left: auto;
     margin-right: auto;
-    line-height: 1.3;
-}
-
-.hero-description {
-    font-size: 0.85rem;
-    color: #64748b;
-    max-width: 580px;
-    margin: 0 auto 0.75rem;
     line-height: 1.4;
 }
-
-/* Trust Indicators - compact */
+.hero-description {
+    font-size: 0.9rem;
+    color: #64748b;
+    max-width: 580px;
+    margin: 0 auto 1rem;
+    line-height: 1.5;
+}
+/* Trust Indicators */
 .trust-bar {
     display: flex;
     justify-content: center;
-    gap: 1rem;
-    margin: 0.75rem 0 0 0;
+    gap: 1.5rem;
+    margin: 1rem 0 0 0;
     flex-wrap: wrap;
 }
-
 .trust-indicator {
     display: flex;
     align-items: center;
-    gap: 0.3rem;
+    gap: 0.4rem;
     color: #10b981;
     font-weight: 600;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
 }
-
-/* Status Cards - utilize more space efficiently */
+/* Modern Status Cards */
 .status-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 0.75rem;
-    margin: 0.75rem 0;
-    padding: 0;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.25rem;
+    margin: 1.5rem 0;
+    padding: 0 1rem;
 }
-
 .status-card {
     background: rgba(30, 41, 59, 0.8);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(59, 130, 246, 0.2);
     border-radius: 10px;
-    padding: 0.75rem;
+    padding: 1.25rem;
     text-align: center;
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
 }
-
 .status-card::before {
     content: '';
     position: absolute;
@@ -324,89 +137,76 @@ html, body {
     background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
     transition: left 0.5s ease;
 }
-
 .status-card:hover::before {
     left: 100%;
 }
-
 .status-card:hover {
     transform: translateY(-2px);
     border-color: rgba(59, 130, 246, 0.5);
     box-shadow: 0 8px 16px rgba(59, 130, 246, 0.15);
 }
-
 .status-card-icon {
     font-size: 1.75rem;
     margin-bottom: 0.5rem;
     color: #10b981;
 }
-
 .status-card-title {
     font-size: 1rem;
     font-weight: 700;
     color: #f1f5f9;
     margin-bottom: 0.3rem;
 }
-
 .status-card-value {
     font-size: 2rem;
     font-weight: 800;
     color: #3b82f6;
     margin-bottom: 1rem;
 }
-
 .status-card-desc {
     color: #94a3b8;
     font-size: 0.9rem;
     line-height: 1.5;
 }
-
-/* Modern Form Container - efficient space usage */
+/* Modern Form Container */
 .form-container {
     background: rgba(30, 41, 59, 0.9);
     backdrop-filter: blur(15px);
     border: 1px solid rgba(59, 130, 246, 0.2);
     border-radius: 12px;
-    padding: 1rem;
-    margin: 0.5rem 0;
+    padding: 1.5rem;
+    margin: 1rem;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
-
 .form-title {
-    font-size: 1.3rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: #f1f5f9;
     text-align: center;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.5rem;
 }
-
 .form-subtitle {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     color: #94a3b8;
     text-align: center;
-    margin-bottom: 1rem;
-    line-height: 1.3;
+    margin-bottom: 1.5rem;
+    line-height: 1.4;
 }
-
-/* Enhanced Form Controls - compact but readable */
+/* Enhanced Form Controls */
 .stTextArea textarea {
     background: rgba(15, 23, 42, 0.9) !important;
     border: 2px solid rgba(59, 130, 246, 0.3) !important;
     border-radius: 10px !important;
     color: #f1f5f9 !important;
-    font-size: 0.9rem !important;
-    padding: 0.75rem !important;
-    height: 80px !important;
+    font-size: 0.95rem !important;
+    padding: 1rem !important;
     transition: all 0.3s ease !important;
     backdrop-filter: blur(10px) !important;
 }
-
 .stTextArea textarea:focus {
     border-color: #3b82f6 !important;
     box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15) !important;
     background: rgba(15, 23, 42, 1) !important;
 }
-
 .stSelectbox > div > div {
     background: rgba(15, 23, 42, 0.9) !important;
     border: 2px solid rgba(59, 130, 246, 0.3) !important;
@@ -414,12 +214,10 @@ html, body {
     transition: all 0.3s ease !important;
     backdrop-filter: blur(10px) !important;
 }
-
 .stSelectbox > div > div:focus-within {
     border-color: #3b82f6 !important;
     box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15) !important;
 }
-
 .stTextInput > div > div {
     background: rgba(15, 23, 42, 0.9) !important;
     border: 2px solid rgba(59, 130, 246, 0.3) !important;
@@ -427,16 +225,13 @@ html, body {
     transition: all 0.3s ease !important;
     backdrop-filter: blur(10px) !important;
 }
-
 .stTextInput > div > div:focus-within {
     border-color: #3b82f6 !important;
     box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15) !important;
 }
-
 .stSlider > div > div > div {
     background: rgba(59, 130, 246, 0.2) !important;
 }
-
 /* Premium Button Design */
 .stButton > button {
     background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #10b981 100%) !important;
@@ -453,7 +248,6 @@ html, body {
     position: relative !important;
     overflow: hidden !important;
 }
-
 .stButton > button:before {
     content: '';
     position: absolute;
@@ -464,17 +258,14 @@ html, body {
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
     transition: left 0.6s ease;
 }
-
 .stButton > button:hover:before {
     left: 100%;
 }
-
 .stButton > button:hover {
     transform: translateY(-3px) !important;
     box-shadow: 0 15px 35px rgba(59, 130, 246, 0.6) !important;
     background: linear-gradient(135deg, #2563eb 0%, #7c3aed 50%, #059669 100%) !important;
 }
-
 /* Modern Status Pills */
 .status-pill {
     display: inline-flex;
@@ -491,28 +282,24 @@ html, body {
     backdrop-filter: blur(10px);
     transition: all 0.3s ease;
 }
-
 .status-success {
     background: linear-gradient(135deg, rgba(16, 185, 129, 0.9), rgba(5, 150, 105, 0.9));
     border: 1px solid rgba(16, 185, 129, 0.5);
     color: white;
     box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
 }
-
 .status-warning {
     background: linear-gradient(135deg, rgba(245, 158, 11, 0.9), rgba(217, 119, 6, 0.9));
     border: 1px solid rgba(245, 158, 11, 0.5);
     color: white;
     box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
 }
-
 .status-error {
     background: linear-gradient(135deg, rgba(239, 68, 68, 0.9), rgba(220, 38, 38, 0.9));
     border: 1px solid rgba(239, 68, 68, 0.5);
     color: white;
     box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
 }
-
 /* Section Headers */
 .section-header {
     font-size: 1.5rem;
@@ -523,7 +310,6 @@ html, body {
     margin-bottom: 1rem;
     text-align: center;
 }
-
 .section-subtext {
     color: #94a3b8;
     font-size: 0.95rem;
@@ -531,7 +317,6 @@ html, body {
     margin-bottom: 1.5rem;
     line-height: 1.5;
 }
-
 /* Sidebar Modern Design */
 .sidebar-header {
     color: #f1f5f9;
@@ -542,14 +327,12 @@ html, body {
     border-bottom: 2px solid rgba(59, 130, 246, 0.3);
     text-align: center;
 }
-
 .sidebar-subheader {
     color: #10b981;
     font-size: 1rem;
     font-weight: 600;
     margin-bottom: 0.75rem;
 }
-
 /* Modern Image Cards */
 .image-card {
     background: rgba(30, 41, 59, 0.9);
@@ -563,7 +346,6 @@ html, body {
     overflow: hidden;
     position: relative;
 }
-
 .image-card::before {
     content: '';
     position: absolute;
@@ -574,17 +356,14 @@ html, body {
     background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.1), transparent);
     transition: left 0.5s ease;
 }
-
 .image-card:hover::before {
     left: 100%;
 }
-
 .image-card:hover {
     transform: translateY(-3px);
     border-color: rgba(16, 185, 129, 0.5);
     box-shadow: 0 15px 30px rgba(16, 185, 129, 0.15);
 }
-
 .image-caption {
     text-align: center;
     color: #94a3b8;
@@ -594,7 +373,6 @@ html, body {
     padding-top: 0.75rem;
     border-top: 1px solid rgba(59, 130, 246, 0.2);
 }
-
 /* Visual Separators */
 .visual-separator {
     height: 1px;
@@ -602,13 +380,11 @@ html, body {
     margin: 1.5rem 0;
     border-radius: 1px;
 }
-
 /* Hide Streamlit Elements */
 #MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
 header {visibility: hidden;}
 .stDeployButton {visibility: hidden;}
-
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
     width: 10px;
@@ -623,7 +399,6 @@ header {visibility: hidden;}
 ::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(135deg, #2563eb, #059669);
 }
-
 /* Responsive Design */
 @media (max-width: 768px) {
     .hero-title {
@@ -642,7 +417,6 @@ header {visibility: hidden;}
 }
 </style>
 """, unsafe_allow_html=True)
-
 # Initialize components
 @st.cache_resource
 def initialize_components():
@@ -653,9 +427,7 @@ def initialize_components():
         "fibo_client": FIBOClient(),
         "audit_log": AuditLog("audit_log.json")
     }
-
 components = initialize_components()
-
 # Compact Header Section
 st.markdown("""
 <div class="hero-section">
@@ -681,11 +453,18 @@ st.markdown("""
     </div>
 </div>
 """, unsafe_allow_html=True)
-
+        <div style="text-align: center; padding: 2rem 0;">
+            <h1 style="color: #3b82f6; font-size: 3rem; margin: 0; font-weight: 700;">
+                �️ FIBO BrandGuard
+            </h1>
+            <p style="color: #10b981; font-size: 1.2rem; margin: 0.5rem 0 0 0; font-weight: 500;">
+                Controlled Visuals. Trusted Brands
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
 # Status Grid with Modern Cards
 policy_summary = components["policy_engine"].get_policy_summary()
 stats = components["audit_log"].get_statistics()
-
 # Get setup info for display
 try:
     setup_info = components["fibo_client"].validate_setup()
@@ -698,7 +477,6 @@ except:
     model_info = "Unknown"
     token_status = "Unknown"
     client_status = "Unknown"
-
 st.markdown(f"""
 <div class="status-grid">
     <div class="status-card">
@@ -721,78 +499,57 @@ st.markdown(f"""
     </div>
 </div>
 """, unsafe_allow_html=True)
-
 # Sidebar for brand policy information
 with st.sidebar:
     st.markdown('<h2 class="sidebar-header">Brand Policies</h2>', unsafe_allow_html=True)
-    
     policy_summary = components["policy_engine"].get_policy_summary()
-    
     st.markdown(f'<h3 class="sidebar-subheader">Brand: {policy_summary["brand_name"]}</h3>', unsafe_allow_html=True)
-    
     with st.expander("Allowed Themes", expanded=False):
         themes = policy_summary.get("policies", {}).get("allowed_themes", [])
         for theme in themes:
             st.write(f"• {theme}")
-    
     with st.expander("Prohibited Content", expanded=False):
         prohibited = policy_summary.get("policies", {}).get("prohibited_content", [])
         for item in prohibited:
             st.write(f"• {item}")
-    
     with st.expander("Color Preferences", expanded=False):
-        colors = policy_summary.get("policies", {}).get("color_preferences", [])
-        for color in colors:
-            st.write(f"• {color}")
-    
-    st.divider()
-    
-    # Governance Metrics
-    st.markdown('<h3 class="sidebar-subheader">Governance Metrics</h3>', unsafe_allow_html=True)
-    stats = components["audit_log"].get_statistics()
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        st.metric("Total Requests", stats["generation_requests"])
         st.metric("Approved", stats["approved_requests"])
     with col2:
         st.metric("Violations", stats["policy_violations"])
         approval_rate = stats.get("approval_rate", 0)
         st.metric("Approval Rate", f"{stats['approval_rate']:.1f}%")
-
 # Main content area
 tab1, tab2, tab3 = st.tabs(["Generate Images", "Audit Log", "About"])
-
 with tab1:
-    # Compact section heading
-    st.markdown("#### Create Brand-Safe AI Visuals")
-    st.markdown("*Transform your creative vision into governed prompts that align with enterprise brand standards and regulatory requirements.*")
-    
-    # Scene Description - more compact
+    st.markdown("""
+    <div class="form-container">
+        <h2 class="form-title">Create Brand-Safe AI Visuals</h2>
+        <p class="form-subtitle">Transform your creative vision into governed prompts that align with enterprise brand standards and regulatory requirements.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    # Scene Description - full width
     scene = st.text_area(
         "Scene Description",
         placeholder="Describe the scene you want to generate (e.g., 'Modern office workspace with diverse team collaborating')",
-        height=100,
+        height=120,
         help="Provide a clear description that aligns with your brand guidelines"
     )
-    
-    # Form controls layout - more compact
+    # Visual separator
+    st.markdown('<div class="visual-separator"></div>', unsafe_allow_html=True)
+    # Form controls layout
     col1, col2 = st.columns([3, 1])
-    
     with col1:
         style = st.selectbox(
             "Visual Style",
             options=["photorealistic", "artistic", "product photography", "modern", "minimalist"],
             help="Select the visual approach for your image"
         )
-    
     with col2:
         template = st.selectbox(
             "Template",
             options=["basic", "product", "creative"],
             help="Choose a pre-configured template"
         )
-        
         num_variants = st.slider(
             "Number of Variants",
             min_value=1,
@@ -801,40 +558,33 @@ with tab1:
             step=1,
             help="Generate multiple governed variations"
         )
-    
     # Advanced options
     with st.expander("Advanced Options"):
         col1, col2 = st.columns(2)
-        
         with col1:
             modifiers_input = st.text_input(
                 "Modifiers (comma-separated)",
                 placeholder="high quality, professional, clean",
                 help="Quality and style modifiers"
             )
-            
             colors_input = st.text_input(
                 "Colors (comma-separated)",
                 placeholder="blue, white, gray",
                 help="Preferred brand colors"
             )
-        
         with col2:
             elements_input = st.text_input(
                 "Elements (comma-separated)",
                 placeholder="laptop, plants, natural lighting",
                 help="Specific elements to include"
             )
-            
             mood = st.text_input(
                 "Mood",
                 placeholder="professional, innovative, collaborative",
                 help="Desired atmosphere and tone"
             )
-    
     # Generate button - full width centered
     generate_clicked = st.button("Generate Governed Images", type="primary", use_container_width=True)
-    
     # View JSON Prompt preview
     if scene:
         with st.expander("View JSON Prompt", expanded=False):
@@ -843,7 +593,6 @@ with tab1:
                 modifiers = [m.strip() for m in modifiers_input.split(",") if m.strip()] if modifiers_input else None
                 colors = [c.strip() for c in colors_input.split(",") if c.strip()] if colors_input else None
                 elements = [e.strip() for e in elements_input.split(",") if e.strip()] if elements_input else None
-                
                 # Create prompt preview
                 if template != "basic":
                     preview_prompt = components["vlm_agent"].apply_template(
@@ -867,28 +616,16 @@ with tab1:
                 st.json(preview_prompt)
             except Exception as e:
                 st.error("Unable to generate prompt preview")
-    
     # Process generation request
     if generate_clicked:
         if not scene:
-            st.error("⚠️ Please provide a scene description to get started!")
+            st.error("Please provide a scene description!")
         else:
-            # Initialize progress tracking
-            progress_bar = st.progress(0)
-            status_text = st.empty()
-            
             try:
-                status_text.text("🧠 Processing prompt through VLM Agent...")
-                progress_bar.progress(10)
-                
                 # Parse advanced options
                 modifiers = [m.strip() for m in modifiers_input.split(",") if m.strip()] if modifiers_input else None
                 colors = [c.strip() for c in colors_input.split(",") if c.strip()] if colors_input else None
                 elements = [e.strip() for e in elements_input.split(",") if e.strip()] if elements_input else None
-                
-                status_text.text("📝 Creating structured JSON prompt...")
-                progress_bar.progress(25)
-                
                 # Create prompt
                 if template != "basic":
                     prompt = components["vlm_agent"].apply_template(
@@ -909,34 +646,22 @@ with tab1:
                         elements=elements,
                         mood=mood
                     )
-                
-                status_text.text("🛡️ Validating against brand policies...")
-                progress_bar.progress(40)
-                
                 # Validate against policies
-                st.markdown("### Policy Validation")
+                st.markdown('<h3 class="section-header">Policy Validation</h3>', unsafe_allow_html=True)
                 is_valid, violations, warnings = components["policy_engine"].validate_prompt(prompt)
-                
                 policy_decision = {
                     "is_valid": is_valid,
                     "violations": violations,
                     "warnings": warnings,
                     "timestamp": datetime.now().isoformat()
                 }
-                
-                progress_bar.progress(60)
-                
-                # Enhanced status summary with better feedback
+                # Compact status summary
                 if is_valid and not warnings:
-                    st.success("🎉 **Fully Compliant** - All brand policies passed successfully!")
-                    st.markdown('<span class="status-pill status-success">Approved</span> Ready for generation', unsafe_allow_html=True)
+                    st.markdown('<span class="status-pill status-success">Compliant</span> All policies passed', unsafe_allow_html=True)
                 elif is_valid and warnings:
-                    st.warning("⚡ **Approved with Recommendations** - Minor optimizations available")
                     st.markdown('<span class="status-pill status-warning">Approved with Notes</span> Minor recommendations available', unsafe_allow_html=True)
                 else:
-                    st.error("🚫 **Policy Violation Detected** - Generation blocked for compliance")
-                    st.markdown('<span class="status-pill status-error">Blocked</span> Must resolve violations first', unsafe_allow_html=True)
-                
+                    st.markdown('<span class="status-pill status-error">Policy Violation</span> Generation blocked', unsafe_allow_html=True)
                 # Detailed messages in expander
                 if violations or warnings:
                     with st.expander("View Policy Details"):
@@ -948,14 +673,12 @@ with tab1:
                             st.subheader("Recommendations")
                             for warning in warnings:
                                 st.warning(f"• {warning}")
-                
                 # Log the request
                 entry_id = components["audit_log"].log_generation_request(
                     prompt,
                     policy_decision,
                     user="streamlit_user"
                 )
-                
                 if not is_valid:
                     components["audit_log"].log_policy_violation(
                         prompt,
@@ -963,186 +686,106 @@ with tab1:
                         user="streamlit_user"
                     )
                     st.stop()
-                
                 # Enhance prompt if needed
                 if warnings:
                     enhanced_prompt = components["policy_engine"].enhance_prompt(prompt)
                     if enhanced_prompt != prompt:
                         st.info("**Enhanced Prompt with Brand Alignment Applied**")
                         prompt = enhanced_prompt
-                
                 # Generated Images Section
-                st.markdown("### Generated Images")
-                st.markdown("All variants enforced by brand policies and recorded in the audit log.")
-                
-                status_text.text("🎨 Initializing Bria FIBO generation pipeline...")
-                progress_bar.progress(70)
-                
+                st.markdown('<h3 class="section-header">Generated Images</h3>', unsafe_allow_html=True)
+                st.markdown('<p class="section-subtext">All variants enforced by brand policies and recorded in the audit log.</p>', unsafe_allow_html=True)
                 try:
                     # Show generation info and progress  
                     estimated_time = num_variants * 17  # Average 17 seconds per variant
-                    
                     # Progress info box
                     with st.container():
-                        st.info(f"**🚀 Generating {num_variants} creative variant{'s' if num_variants > 1 else ''}**")
-                        
+                        st.info(f"**Generating {num_variants} creative variant{'s' if num_variants > 1 else ''}**")
                         col1, col2, col3 = st.columns(3)
                         with col1:
-                            st.metric("🎯 Variants", num_variants)
+                            st.metric("Variants", num_variants)
                         with col2:
                             st.metric("⏱️ Est. Time", f"~{estimated_time}s")
                         with col3:
-                            st.metric("🤖 Model", "Bria FIBO")
-                        
+                            st.metric("Model", "Bria FIBO")
                         # Progress steps
                         st.markdown("""
-                        **🔄 Generation Process:**
-                        1. ✅ HF token validated and FIBO pipeline initialized
-                        2. 🎲 Creating unique variants with randomized seeds  
-                        3. 🎨 Applying creative enhancements (lighting, angles, moods)
-                        4. 🛡️ Ensuring brand compliance throughout generation
-                        5. 🖼️ Finalizing high-quality professional images
+                        **Generation Process:**
+                        1. 🔄 Initializing FIBO pipeline with your HF token
+                        2. Creating unique variants with random seeds  
+                        3. Applying creative enhancements (lighting, angles, moods)
+                        4. Ensuring brand compliance throughout
+                        5. Finalizing high-quality images
                         """)
-                    
-                    progress_bar.progress(85)
-                    status_text.text("🖼️ Generating brand-compliant images...")
-                    
                     # Actual generation with enhanced spinner
-                    with st.spinner(f"🎨 Generating {num_variants} brand-compliant creative variants... ⏱️ ~{estimated_time}s"):
+                    with st.spinner(f"Generating {num_variants} brand-compliant creative variants... This may take {estimated_time}s"):
                         import time
                         start_time = time.time()
-                        
-                        logger.info(f"🎬 Starting image generation in app.py")
-                        logger.info(f"🎯 Prompt being sent: {prompt}")
-                        logger.info(f"🔢 Number of variants requested: {num_variants}")
-                        
                         results = components["fibo_client"].generate_images(
                             prompt,
                             num_variants=num_variants
                         )
-                        
                         generation_time = time.time() - start_time
-                        logger.info(f"⏱️ Total generation time: {generation_time:.2f}s")
-                        logger.info(f"📊 Results received: {len(results) if results else 0} items")
-                        
-                        # Log each result for debugging
+                        # Show completion message
                         if results:
-                            for i, result in enumerate(results):
-                                logger.info(f"📷 Result {i+1}: Status={result.get('status')}, Has Image={bool(result.get('image'))}")
+                            st.success(f"Generation completed in {generation_time:.1f}s!")
+                        # Log results
+                        components["audit_log"].log_generation_result(entry_id, results)
+                        if not results:
+                            st.warning("Remote FIBO generation is temporarily unavailable. Your prompt and audit log are still recorded.")
                         else:
-                            logger.warning("⚠️ No results returned from FIBO client")
-                        
-                    progress_bar.progress(100)
-                    status_text.text("✅ Generation completed successfully!")
-                    
-                    # Clear progress indicators after successful completion
-                    import time
-                    time.sleep(1)
-                    progress_bar.empty()
-                    status_text.empty()
-                    
-                    # Log results
-                    logger.info("📝 Logging results to audit system")
-                    components["audit_log"].log_generation_result(entry_id, results)
-                    
-                    # Enhanced success/failure feedback
-                    if not results:
-                        logger.warning("⚠️ No results to display - showing unavailable message")
-                        st.warning("⚠️ **Remote FIBO generation temporarily unavailable** - Your prompt and audit log are still recorded for future processing.")
-                        st.info("💡 This demonstrates the platform's audit capabilities even during service interruptions.")
-                    else:
-                        logger.info(f"✅ Displaying {len(results)} successful results")
-                        # Show completion with metrics
-                        st.success(f"🎉 **Generation completed successfully!** ⏱️ {generation_time:.1f}s | 🛡️ Fully compliant | 📊 Audit logged")
-                        
-                        # Display images in responsive columns
-                        if len(results) > 1:
-                            cols = st.columns(len(results))
-                            for idx, (col, result) in enumerate(zip(cols, results), start=1):
-                                with col:
-                                    if "image" in result and result["image"]:
-                                        st.image(result["image"], use_column_width=True)
-                                        
-                                        # Enhanced caption with metadata
-                                        generation_timestamp = datetime.now().strftime("%H:%M:%S")
-                                        st.caption(f"🎯 **Variant {idx}** | 🕐 {generation_timestamp}")
-                                        
-                                        # Status indicator
-                                        if result.get("status") == "success":
-                                            st.markdown('<span class="status-pill status-success">✅ Compliant</span>', unsafe_allow_html=True)
-                                        elif result.get("status") == "safe_mode":
-                                            st.markdown('<span class="status-pill status-warning">⚡ Safe Mode Preview</span>', unsafe_allow_html=True)
-                                        else:
-                                            st.markdown('<span class="status-pill status-warning">Placeholder Mode</span>', unsafe_allow_html=True)
-                                            
-                                            # Technical details in expander
-                                            with st.expander(f"View Details"):
-                                                metadata = result.get("metadata", {})
-                                                st.write(f"**Model:** {metadata.get('model', 'Unknown')}")
-                                                st.write(f"**Provider:** {metadata.get('provider', 'Unknown')}")
-                                                st.write(f"**Generation Time:** {result.get('generation_time', 0):.1f}s")
-                                                st.write(f"**Size:** {metadata.get('size', 'Unknown')}")
-                                                st.write(f"**Seed:** {metadata.get('seed', 'Unknown')}")
-                                                
-                                                if result.get("prompt_string"):
-                                                    st.write("**Final Prompt:**")
-                                                    prompt_display = result.get("prompt_string", "")
-                                                    if len(prompt_display) > 200:
-                                                        prompt_display = prompt_display[:200] + "..."
-                                                    st.code(prompt_display)
-                            else:
-                                # Single image - center it
-                                result = results[0]
-                                col1, col2, col3 = st.columns([1, 2, 1])
-                                with col2:
-                                    if "image" in result and result["image"]:
-                                        st.image(result["image"], use_column_width=True)
-                                        st.caption("Variant 1")
-                                        
-                                        # Status indicator
-                                        if result.get("status") == "success":
-                                            st.markdown('<span class="status-pill status-success">Compliant</span>', unsafe_allow_html=True)
-                                        elif result.get("status") == "safe_mode":
-                                            st.markdown('<span class="status-pill status-warning">Safe Mode Preview</span>', unsafe_allow_html=True)
-                                        else:
-                                            st.markdown('<span class="status-pill status-warning">Placeholder Mode</span>', unsafe_allow_html=True)
-                                        
-                                        # Technical details in expander
-                                        with st.expander(f"View Details"):
-                                            metadata = result.get("metadata", {})
-                                            col_a, col_b = st.columns(2)
-                                            with col_a:
-                                                st.write(f"**Model:** {metadata.get('model', 'Unknown')}")
-                                                st.write(f"**Provider:** {metadata.get('provider', 'Unknown')}")
-                                                st.write(f"**Generation Time:** {result.get('generation_time', 0):.1f}s")
-                                            with col_b:
-                                                st.write(f"**Size:** {metadata.get('size', 'Unknown')}")
-                                                st.write(f"**Seed:** {metadata.get('seed', 'Unknown')}")
-                                            
-                                            if result.get("prompt_string"):
-                                                st.write("**Final Prompt:**")
-                                                prompt_display = result.get("prompt_string", "")
-                                                if len(prompt_display) > 200:
-                                                    prompt_display = prompt_display[:200] + "..."
-                                                st.code(prompt_display)
-                
+                            # Display images in styled cards
+                            for idx, result in enumerate(results):
+                                st.markdown(f"""
+                                <div class="image-card">
+                                    <h4 style="color: #3b82f6; margin-bottom: 1rem;">Variant {result['variant_id']}</h4>
+                                """, unsafe_allow_html=True)
+                                if "image" in result and result["image"]:
+                                    st.image(
+                                        result["image"], 
+                                        use_column_width=True
+                                    )
+                                    # Add custom caption
+                                    st.markdown(f'<p class="image-caption">Variant {result["variant_id"]} — Enterprise Compliant</p>', unsafe_allow_html=True)
+                                # Status indicator
+                                if result.get("status") == "success":
+                                    st.markdown('<span class="status-pill status-success">Compliant</span>', unsafe_allow_html=True)
+                                elif result.get("status") == "safe_mode":
+                                    st.markdown('<span class="status-pill status-warning">Safe Mode Preview</span>', unsafe_allow_html=True)
+                                else:
+                                    st.markdown('<span class="status-pill status-warning">Placeholder Mode</span>', unsafe_allow_html=True)
+                                # Technical details in expander
+                                with st.expander(f"Technical Details"):
+                                    metadata = result.get("metadata", {})
+                                    col1, col2 = st.columns(2)
+                                    with col1:
+                                        st.write(f"**Model:** {metadata.get('model', 'Unknown')}")
+                                        st.write(f"**Provider:** {metadata.get('provider', 'Unknown')}")
+                                        st.write(f"**Generation Time:** {result.get('generation_time', 0):.1f}s")
+                                    with col2:
+                                        st.write(f"**Size:** {metadata.get('size', 'Unknown')}")
+                                        st.write(f"**Seed:** {metadata.get('seed', 'Unknown')}")
+                                    if result.get("prompt_string"):
+                                        st.write("**Final Prompt:**")
+                                        prompt_display = result.get("prompt_string", "")
+                                        if len(prompt_display) > 200:
+                                            prompt_display = prompt_display[:200] + "..."
+                                        st.code(prompt_display)
+                                st.markdown("</div>", unsafe_allow_html=True)
+                                st.markdown("<br>", unsafe_allow_html=True)
                 except Exception as e:
                     st.error("Remote FIBO generation is temporarily unavailable. Your prompt and audit log are still recorded.")
                     st.write("Technical details logged to console.")
                     print(f"Generation error: {e}")
-            
             except Exception as e:
                 st.error("An error occurred during processing. Please try again.")
                 st.write("Technical details logged to console.")
                 print(f"Processing error: {e}")
-
 with tab2:
-    st.markdown("### Audit Log")
-    st.markdown("Every generation is captured with inputs, decisions, and outputs for compliance review.")
-    
+    st.markdown('<h2 class="section-header">Audit Log</h2>', unsafe_allow_html=True)
+    st.markdown('<p class="section-subtext">Every generation is captured with inputs, decisions, and outputs for compliance review.</p>', unsafe_allow_html=True)
     # Summary metrics at the top
     stats = components["audit_log"].get_statistics()
-    
     col1, col2, col3, col4 = st.columns(4)
     with col1:
         st.markdown(f"""
@@ -1151,7 +794,6 @@ with tab2:
             <p style="font-size: 1.5rem; font-weight: bold; margin: 0.25rem 0;">{stats["generation_requests"]}</p>
         </div>
         """, unsafe_allow_html=True)
-    
     with col2:
         st.markdown(f"""
         <div class="metric-container">
@@ -1159,7 +801,6 @@ with tab2:
             <p style="font-size: 1.5rem; font-weight: bold; margin: 0.25rem 0;">{stats["approval_rate"]:.1f}%</p>
         </div>
         """, unsafe_allow_html=True)
-    
     with col3:
         st.markdown(f"""
         <div class="metric-container">
@@ -1167,42 +808,32 @@ with tab2:
             <p style="font-size: 1.5rem; font-weight: bold; margin: 0.25rem 0;">{stats["policy_violations"]}</p>
         </div>
         """, unsafe_allow_html=True)
-    
     with col4:
         # Get last activity time
         entries = components["audit_log"].get_recent_entries(1)
         last_activity = "No activity" if not entries else entries[0].get('timestamp', 'N/A')[:16]
-        
         st.markdown(f"""
         <div class="metric-container">
             <h4 style="color: #9ca3af; margin: 0;">Last Activity</h4>
             <p style="font-size: 1rem; font-weight: bold; margin: 0.25rem 0;">{last_activity}</p>
         </div>
         """, unsafe_allow_html=True)
-    
     st.markdown("<br>", unsafe_allow_html=True)
-    
     # Controls
     col1, col2 = st.columns([3, 1])
-    
     with col2:
         if st.button("Clear Log", type="secondary"):
             components["audit_log"].clear_log()
             st.success("Audit log cleared!")
             st.rerun()
-        
         limit = st.number_input("Show last N entries", min_value=5, max_value=50, value=10)
-    
     # Display recent entries as clean rows
     entries = components["audit_log"].get_recent_entries(limit)
-    
     if entries:
-        st.markdown("#### Recent Activity")
-        
+        st.markdown('<h4 style="color: #3b82f6; margin: 1rem 0 0.5rem 0;">Recent Activity</h4>', unsafe_allow_html=True)
         for entry in reversed(entries):
             entry_type = entry.get('type', 'unknown').replace('_', ' ').title()
             timestamp = entry.get('timestamp', 'N/A')
-            
             # Determine status
             if entry_type == "Generation Request":
                 is_valid = entry.get('policy_decision', {}).get('is_valid', False)
@@ -1211,13 +842,11 @@ with tab2:
             else:
                 status = "Recorded"
                 status_class = "status-success"
-            
             with st.expander(f"{timestamp} | {entry_type} | {status}", expanded=False):
                 # Show key information first
                 if entry_type == "Generation Request":
                     policy_decision = entry.get('policy_decision', {})
                     col1, col2 = st.columns(2)
-                    
                     with col1:
                         st.write("**Request Summary:**")
                         st.write(f"Status: {status}")
@@ -1229,7 +858,6 @@ with tab2:
                             st.write("**Warnings:**")
                             for warning in policy_decision['warnings']:
                                 st.write(f"• {warning}")
-                    
                     with col2:
                         prompt = entry.get('prompt', {})
                         if prompt.get('scene'):
@@ -1238,32 +866,27 @@ with tab2:
                             st.write(f"**Style:** {prompt['style']}")
                         if prompt.get('modifiers'):
                             st.write(f"**Modifiers:** {', '.join(prompt['modifiers'])}")
-                
                 # Full JSON details
                 st.divider()
                 st.write("**Complete Entry Data:**")
                 st.json(entry)
     else:
         st.info("No audit log entries yet. Generate some images to see the audit trail!")
-
 with tab3:
-    st.markdown("### About FIBO BrandGuard")
-    
+    st.markdown('<h2 class="section-header">About FIBO BrandGuard</h2>', unsafe_allow_html=True)
     # Hero section
     st.markdown("""
     <div style='background: linear-gradient(135deg, #3b82f6 0%, #059669 100%); padding: 2rem; border-radius: 0.75rem; margin-bottom: 2rem; border: 1px solid #374151;'>
-    <h4 style='color: white; text-align: center; margin: 0; font-size: 1.25rem;'>
+    <h3 style='color: white; text-align: center; margin: 0; font-size: 1.5rem;'>
     Enterprise-Grade AI Governance Platform
-    </h4>
+    </h3>
     <p style='color: rgba(255, 255, 255, 0.9); text-align: center; margin: 1rem 0 0 0; font-size: 1rem;'>
     FIBO BrandGuard bridges the gap between AI image generation and enterprise governance, ensuring every generated visual aligns with brand policies while maintaining complete audit trails for regulatory compliance.
     </p>
     </div>
     """, unsafe_allow_html=True)
-    
     # Key Capabilities
     st.markdown("### Key Capabilities")
-    
     col1, col2 = st.columns(2)
     with col1:
         st.markdown("""
@@ -1271,19 +894,15 @@ with tab3:
         • **JSON-Native Prompts**: Structured, programmatic prompt construction for consistency
         • **Remote Bria FIBO Integration**: Direct API connection to Bria's cutting-edge model
         """)
-    
     with col2:
         st.markdown("""
         • **Full Audit Trail**: Complete logging of all generations, decisions, and compliance actions
         • **Template-Based Workflows**: Pre-configured templates for common business use cases
         • **Creative Variant Generation**: Multiple governed variations with unique seeds
         """)
-    
     st.divider()
-    
     # Who It's For
     st.markdown("### Who It's For")
-    
     col1, col2, col3 = st.columns(3)
     with col1:
         st.markdown("""
@@ -1292,7 +911,6 @@ with tab3:
         - Multi-market compliance
         - Automated brand enforcement
         """)
-    
     with col2:
         st.markdown("""
         **Financial Services**
@@ -1300,7 +918,6 @@ with tab3:
         - Risk management
         - Audit documentation
         """)
-    
     with col3:
         st.markdown("""
         **Creative Agencies**
@@ -1308,24 +925,18 @@ with tab3:
         - Scalable production
         - Quality assurance
         """)
-    
     st.divider()
-    
     # Architecture
     st.markdown("### Architecture")
-    
     st.markdown("""
     FIBO BrandGuard implements a governance-first architecture where every component ensures compliance:
-    
     **UI → Policy Engine → JSON Builder → Bria FIBO API → Audit Log**
-    
     1. User provides scene description and style preferences
     2. Policy Engine validates against brand guidelines before generation
     3. VLM Agent constructs structured JSON prompts with compliance tags
     4. FIBO Client generates creative variants via Bria's remote API
     5. Audit Logger captures complete transaction history for compliance
     """)
-    
     # Example prompt
     with st.expander("Example Governed JSON Prompt"):
         st.json({
@@ -1342,12 +953,9 @@ with tab3:
                 "approved_themes": ["workplace", "technology", "collaboration"]
             }
         })
-    
     st.divider()
-    
     # Technologies Used
     st.markdown("### Technologies Used")
-    
     col1, col2 = st.columns(2)
     with col1:
         st.markdown("""
@@ -1356,7 +964,6 @@ with tab3:
         - Python: Backend logic and policy enforcement
         - JSON: Structured data throughout system
         """)
-    
     with col2:
         st.markdown("""
         **AI & Generation**
@@ -1364,55 +971,43 @@ with tab3:
         - HuggingFace Hub: Remote API integration
         - Custom VLM Agent: Intelligent prompt construction
         """)
-    
     st.divider()
-    
     # Hackathon Context
     st.markdown("### Hackathon Context")
-    
     st.markdown("""
     Built for the Bria FIBO Hackathon to demonstrate production-ready, governed image generation. 
     FIBO BrandGuard showcases how enterprise organizations can deploy AI image generation with 
     proper governance, compliance, and audit capabilities while maintaining creative freedom 
     within brand guidelines.
     """)
-    
     # System Status
     st.markdown("### System Status")
-    
     try:
         setup_info = components["fibo_client"].validate_setup()
-        
         col1, col2, col3 = st.columns(3)
         with col1:
             if setup_info.get("has_hf_token"):
                 st.markdown('<span class="status-pill status-success">HF Token Connected</span>', unsafe_allow_html=True)
             else:
                 st.markdown('<span class="status-pill status-error">HF Token Missing</span>', unsafe_allow_html=True)
-        
         with col2:
             if setup_info.get("client_available"):
                 st.markdown('<span class="status-pill status-success">Remote Client Ready</span>', unsafe_allow_html=True)
             else:
                 st.markdown('<span class="status-pill status-warning">Safe Mode Active</span>', unsafe_allow_html=True)
-        
         with col3:
             if setup_info.get("mode") == "remote-inference":
                 st.markdown('<span class="status-pill status-success">Production Mode</span>', unsafe_allow_html=True)
             else:
                 st.markdown('<span class="status-pill status-warning">Demo Mode</span>', unsafe_allow_html=True)
-        
         with st.expander("Detailed System Information"):
             st.json(setup_info)
-    
     except Exception as e:
         st.error("Unable to check system status")
         st.write("Technical details logged to console.")
         print(f"Status check error: {e}")
-    
     # Comparison table
     col1, col2 = st.columns(2)
-    
     with col1:
         st.markdown("""
         #### Typical AI Demos
@@ -1422,7 +1017,6 @@ with tab3:
         - Individual use only
         - No compliance features
         """)
-    
     with col2:
         st.markdown("""
         #### FIBO BrandGuard
@@ -1432,19 +1026,15 @@ with tab3:
         - Template-based workflows
         - Automated governance validation
         """)
-    
     st.divider()
-    
     # Core innovations
     st.markdown("""
     ### Core Features
-    
     #### Governance-First Architecture
     Platform validates every prompt against brand policies before generation:
     - Prompt validation against brand guidelines
     - Policy compliance checks  
     - Automated audit trail logging
-    
     #### JSON-Native Enterprise Control
     Structured prompts enable programmatic, systematic generation:
     ```json
@@ -1455,23 +1045,18 @@ with tab3:
       "compliance_tags": ["diversity", "professional", "brand-aligned"]
     }
     ```
-    
     #### Intelligent Creative Variants
     Purposeful diversity within brand guidelines:
     - 12 types of creative variations including lighting, angles, and moods
     - **Unique Seed Management**: True randomness for each variant
     - **Brand Consistency**: All variants maintain compliance
     """)
-    
     st.divider()
-    
     # Enterprise value 
     st.markdown("""
     ### 🏢 Enterprise Value Delivered
     """)
-    
     col1, col2, col3 = st.columns(3)
-    
     with col1:
         st.markdown("""
         #### 🏢 Corporate Marketing
@@ -1479,7 +1064,6 @@ with tab3:
         **Solution**: Automated policy validation + templates  
         **Outcome**: **95% reduction** in brand violations
         """)
-    
     with col2:
         st.markdown("""
         #### Financial Services  
@@ -1487,7 +1071,6 @@ with tab3:
         **Solution**: Policy engine with audit logging  
         **Outcome**: Full regulatory compliance automation
         """)
-    
     with col3:
         st.markdown("""
         #### Design Agencies
@@ -1495,54 +1078,41 @@ with tab3:
         **Solution**: JSON workflows with creative variants  
         **Outcome**: 300% faster brand-compliant creative work
         """)
-        
     st.divider()
-    
     # Technical architecture
     st.markdown("""
     ### Enterprise Architecture
-    
     **Modular, production-ready components:**
-    
     - VLM Agent: JSON prompt construction and management
     - Policy Engine: Brand governance and compliance validation  
     - FIBO Client: Creative variant generation with unique seeds
     - Audit Logger: Complete operation tracking and regulatory reporting
     - Brand Profile: JSON-driven policy configuration system
     """)
-    
     # Hackathon positioning
     st.markdown("""
     ### Hackathon Category: Best JSON-Native or Agentic Workflow
-    
     **Demonstrates ideal JSON-native workflow:**
-    
     1. Agentic Pipeline: VLM Agent → Policy Engine → FIBO Client → Audit Logger
     2. JSON Everything: Prompts, policies, audit logs, and brand profiles use structured data
     3. Systematic Workflow: Every step is programmable, repeatable, and auditable
     4. Enterprise Ready: Built for real business deployment beyond demonstration
     """)
-    
     st.divider()
-    
     # Tech stack
     col1, col2 = st.columns(2)
-    
     with col1:
         st.markdown("""
         ### � Technologies Used
-        
         - **Bria FIBO 1.2**: Advanced image generation via HuggingFace
         - **🖥️ Streamlit**: Professional web interface
         - **🐍 Python**: Backend logic and policy enforcement
         - **JSON**: Structured data throughout the system
         - **☁️ Cloud Ready**: Streamlit Cloud deployment
         """)
-    
     with col2:
         st.markdown("""
         ### Quick Start Guide
-        
         1. **🔑 Get HF Token**: [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens)
         2. **📝 Accept License**: [huggingface.co/briaai/FIBO](https://huggingface.co/briaai/FIBO)  
         3. **Clone & Run**:
@@ -1554,32 +1124,25 @@ with tab3:
            streamlit run app.py
            ```
         """)
-        
     st.divider()
-    
     # Footer section
     col1, col2 = st.columns(2)
-    
     with col1:
         st.markdown("""
         ### 🏆 Built for Bria FIBO Hackathon 2025
-        
         This platform showcases the future of enterprise AI governance - 
         demonstrating how Bria's cutting-edge FIBO model can be deployed 
         safely and systematically in real business environments.
         """)
-    
     with col2:
         st.markdown("""
         ### 📧 Connect & Collaborate
-        
         **🧑‍💻 Developer**: Nolan  
         **📂 Repository**: [GitHub - FIBO BrandGuard](https://github.com/Nolan0803/fibo-brandguard)  
         **🌐 Live Demo**: [Streamlit Cloud](https://fibo-brandguard.streamlit.app)  
         **📄 License**: MIT  
         **🏆 Category**: Best JSON-Native or Agentic Workflow
         """)
-        
     # Closing message
     st.markdown("""
     ---
@@ -1588,40 +1151,32 @@ with tab3:
     <p style='margin: 5px 0 0 0; font-style: italic;'>Where Enterprise AI Governance Meets Creative Innovation</p>
     </div>
     """, unsafe_allow_html=True)
-    
     # System status section
     st.subheader("System Status")
-    
     try:
         setup_info = components["fibo_client"].validate_setup()
-        
         col1, col2, col3 = st.columns(3)
         with col1:
             if setup_info.get("has_hf_token"):
                 st.success("HF Token Connected")
             else:
                 st.error("HF Token Missing")
-        
         with col2:
             if setup_info.get("client_available"):
                 st.success("Remote Client Ready")
             else:
                 st.warning("Remote Client Unavailable")
-        
         with col3:
             if setup_info.get("mode") == "remote-inference":
                 st.success("Remote Mode Active")
             else:
                 st.warning("Safe Mode Active")
-        
         with st.expander("View Detailed System Information"):
             st.json(setup_info)
-    
     except Exception as e:
         st.error("Unable to check system status")
         st.write("Technical details logged to console.")
         print(f"Status check error: {e}")
-
 # Footer
 st.divider()
 st.markdown(
