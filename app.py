@@ -106,18 +106,75 @@ html, body {
     padding: 1rem 0.75rem !important;
 }
 
-/* Tabs - full width and minimal spacing */
+/* Enhanced Tab Styling - better separation and visual clarity */
 .stTabs [data-baseweb="tab-list"] {
-    gap: 0;
-    background: rgba(30, 41, 59, 0.7);
-    border-radius: 8px;
-    padding: 0.25rem;
-    margin: 0.25rem 0 !important;
+    gap: 2px;
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-radius: 12px;
+    padding: 0.5rem;
+    margin: 0.5rem 0 1rem 0 !important;
     width: 100%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
+/* Individual tab styling */
+.stTabs [data-baseweb="tab"] {
+    background: rgba(30, 41, 59, 0.6) !important;
+    border: 1px solid rgba(71, 85, 105, 0.4) !important;
+    border-radius: 8px !important;
+    padding: 0.75rem 1.5rem !important;
+    margin: 0 1px !important;
+    color: #94a3b8 !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+    transition: all 0.3s ease !important;
+    backdrop-filter: blur(10px) !important;
+}
+
+/* Active tab styling */
+.stTabs [data-baseweb="tab"][aria-selected="true"] {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
+    border: 1px solid rgba(59, 130, 246, 0.8) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Tab hover effects */
+.stTabs [data-baseweb="tab"]:hover:not([aria-selected="true"]) {
+    background: rgba(51, 65, 85, 0.8) !important;
+    border-color: rgba(59, 130, 246, 0.5) !important;
+    color: #e2e8f0 !important;
+}
+
+/* Tab panel with better spacing */
 .stTabs [data-baseweb="tab-panel"] {
-    padding: 0.25rem 0 !important;
+    background: rgba(30, 41, 59, 0.3);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 12px;
+    padding: 1rem !important;
+    margin-top: 0.5rem !important;
+    backdrop-filter: blur(10px);
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Additional visual separation for tab content */
+.stTabs [data-baseweb="tab-panel"] > div {
+    border-left: 3px solid rgba(59, 130, 246, 0.3);
+    padding-left: 1rem;
+    margin-left: 0.5rem;
+}
+
+/* Tab panel headers get special treatment */
+.stTabs [data-baseweb="tab-panel"] h1,
+.stTabs [data-baseweb="tab-panel"] h2,
+.stTabs [data-baseweb="tab-panel"] h3,
+.stTabs [data-baseweb="tab-panel"] h4 {
+    border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    color: #e2e8f0 !important;
 }
 
 /* Compact form elements - maximize content density */
