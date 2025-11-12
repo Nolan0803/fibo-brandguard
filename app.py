@@ -1131,18 +1131,18 @@ with tab1:
                                     col_a, col_b = st.columns(2)
                                     with col_a:
                                         st.write(f"**Model:** {metadata.get('model', 'Unknown')}")
-                                                st.write(f"**Provider:** {metadata.get('provider', 'Unknown')}")
-                                                st.write(f"**Generation Time:** {result.get('generation_time', 0):.1f}s")
-                                            with col_b:
-                                                st.write(f"**Size:** {metadata.get('size', 'Unknown')}")
-                                                st.write(f"**Seed:** {metadata.get('seed', 'Unknown')}")
-                                            
-                                            if result.get("prompt_string"):
-                                                st.write("**Final Prompt:**")
-                                                prompt_display = result.get("prompt_string", "")
-                                                if len(prompt_display) > 200:
-                                                    prompt_display = prompt_display[:200] + "..."
-                                                st.code(prompt_display)
+                                        st.write(f"**Provider:** {metadata.get('provider', 'Unknown')}")
+                                        st.write(f"**Generation Time:** {result.get('generation_time', 0):.1f}s")
+                                    with col_b:
+                                        st.write(f"**Size:** {metadata.get('size', 'Unknown')}")
+                                        st.write(f"**Seed:** {metadata.get('seed', 'Unknown')}")
+                                    
+                                    if result.get("prompt_string"):
+                                        st.write("**Final Prompt:**")
+                                        prompt_display = result.get("prompt_string", "")
+                                        if len(prompt_display) > 200:
+                                            prompt_display = prompt_display[:200] + "..."
+                                        st.code(prompt_display)
                 
                 except Exception as e:
                     st.error("Remote FIBO generation is temporarily unavailable. Your prompt and audit log are still recorded.")
