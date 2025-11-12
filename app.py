@@ -1056,11 +1056,16 @@ with tab1:
                         st.success(f"🎉 **Generation completed successfully!** ⏱️ {generation_time:.1f}s | 🛡️ Fully compliant | 📊 Audit logged")
                         
                         # Display images in responsive columns
+                        logger.info(f"🖼️ Preparing to display {len(results)} images")
+                        
                         if len(results) > 1:
+                            logger.info("📊 Multiple images - using column layout")
                             cols = st.columns(len(results))
                             for idx, (col, result) in enumerate(zip(cols, results), start=1):
+                                logger.info(f"🎨 Processing image {idx}: Status={result.get('status')}, Has Image={bool(result.get('image'))}")
                                 with col:
                                     if "image" in result and result["image"]:
+                                        logger.info(f"✅ Displaying image {idx}")
                                         st.image(result["image"], use_column_width=True)
                                         
                                         # Enhanced caption with metadata
@@ -1074,45 +1079,58 @@ with tab1:
                                             st.markdown('<span class="status-pill status-warning">⚡ Safe Mode Preview</span>', unsafe_allow_html=True)
                                         else:
                                             st.markdown('<span class="status-pill status-warning">Placeholder Mode</span>', unsafe_allow_html=True)
+                                    else:
+                                        logger.error(f"❌ Image {idx} missing or invalid: {result}")
+                                        st.error(f"Image {idx} failed to load")
                                             
-                                            # Technical details in expander
-                                            with st.expander(f"View Details"):
-                                                metadata = result.get("metadata", {})
-                                                st.write(f"**Model:** {metadata.get('model', 'Unknown')}")
-                                                st.write(f"**Provider:** {metadata.get('provider', 'Unknown')}")
-                                                st.write(f"**Generation Time:** {result.get('generation_time', 0):.1f}s")
-                                                st.write(f"**Size:** {metadata.get('size', 'Unknown')}")
-                                                st.write(f"**Seed:** {metadata.get('seed', 'Unknown')}")
-                                                
-                                                if result.get("prompt_string"):
-                                                    st.write("**Final Prompt:**")
-                                                    prompt_display = result.get("prompt_string", "")
-                                                    if len(prompt_display) > 200:
-                                                        prompt_display = prompt_display[:200] + "..."
-                                                    st.code(prompt_display)
-                            else:
-                                # Single image - center it
-                                result = results[0]
-                                col1, col2, col3 = st.columns([1, 2, 1])
-                                with col2:
-                                    if "image" in result and result["image"]:
-                                        st.image(result["image"], use_column_width=True)
-                                        st.caption("Variant 1")
+                                    # Technical details in expander
+                                    with st.expander(f"View Details"):
+                                        metadata = result.get("metadata", {})
+                                        st.write(f"**Model:** {metadata.get('model', 'Unknown')}")
+                                        st.write(f"**Provider:** {metadata.get('provider', 'Unknown')}")
+                                        st.write(f"**Generation Time:** {result.get('generation_time', 0):.1f}s")
+                                        st.write(f"**Size:** {metadata.get('size', 'Unknown')}")
+                                        st.write(f"**Seed:** {metadata.get('seed', 'Unknown')}")
                                         
-                                        # Status indicator
-                                        if result.get("status") == "success":
-                                            st.markdown('<span class="status-pill status-success">Compliant</span>', unsafe_allow_html=True)
-                                        elif result.get("status") == "safe_mode":
-                                            st.markdown('<span class="status-pill status-warning">Safe Mode Preview</span>', unsafe_allow_html=True)
-                                        else:
-                                            st.markdown('<span class="status-pill status-warning">Placeholder Mode</span>', unsafe_allow_html=True)
-                                        
-                                        # Technical details in expander
-                                        with st.expander(f"View Details"):
-                                            metadata = result.get("metadata", {})
-                                            col_a, col_b = st.columns(2)
-                                            with col_a:
-                                                st.write(f"**Model:** {metadata.get('model', 'Unknown')}")
+                                        if result.get("prompt_string"):
+                                            st.write("**Final Prompt:**")
+                                            prompt_display = result.get("prompt_string", "")
+                                            if len(prompt_display) > 200:
+                                                prompt_display = prompt_display[:200] + "..."
+                                            st.code(prompt_display)
+                        else:
+                            # Single image - center it
+                            logger.info("📊 Single image - using centered layout")
+                            result = results[0]
+                            logger.info(f"🎨 Processing single image: Status={result.get('status')}, Has Image={bool(result.get('image'))}")
+                            
+                            col1, col2, col3 = st.columns([1, 2, 1])
+                            with col2:
+                                if "image" in result and result["image"]:
+                                    logger.info("✅ Displaying single image")
+                                    st.image(result["image"], use_column_width=True)
+                                    
+                                    # Enhanced caption with metadata  
+                                    generation_timestamp = datetime.now().strftime("%H:%M:%S")
+                                    st.caption(f"🎯 **Variant 1** | 🕐 {generation_timestamp}")
+                                    
+                                    # Status indicator
+                                    if result.get("status") == "success":
+                                        st.markdown('<span class="status-pill status-success">✅ Compliant</span>', unsafe_allow_html=True)
+                                    elif result.get("status") == "safe_mode":
+                                        st.markdown('<span class="status-pill status-warning">⚡ Safe Mode Preview</span>', unsafe_allow_html=True)
+                                    else:
+                                        st.markdown('<span class="status-pill status-warning">Placeholder Mode</span>', unsafe_allow_html=True)
+                                else:
+                                    logger.error(f"❌ Single image missing or invalid: {result}")
+                                    st.error("Image failed to load")
+                                
+                                # Technical details in expander
+                                with st.expander(f"View Details"):
+                                    metadata = result.get("metadata", {})
+                                    col_a, col_b = st.columns(2)
+                                    with col_a:
+                                        st.write(f"**Model:** {metadata.get('model', 'Unknown')}")
                                                 st.write(f"**Provider:** {metadata.get('provider', 'Unknown')}")
                                                 st.write(f"**Generation Time:** {result.get('generation_time', 0):.1f}s")
                                             with col_b:
