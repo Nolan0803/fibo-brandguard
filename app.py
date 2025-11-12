@@ -1022,37 +1022,37 @@ with tab1:
                     time.sleep(1)
                     progress_bar.empty()
                     status_text.empty()
+                    
+                    # Log results
+                    components["audit_log"].log_generation_result(entry_id, results)
+                    
+                    # Enhanced success/failure feedback
+                    if not results:
+                        st.warning("⚠️ **Remote FIBO generation temporarily unavailable** - Your prompt and audit log are still recorded for future processing.")
+                        st.info("💡 This demonstrates the platform's audit capabilities even during service interruptions.")
+                    else:
+                        # Show completion with metrics
+                        st.success(f"🎉 **Generation completed successfully!** ⏱️ {generation_time:.1f}s | 🛡️ Fully compliant | 📊 Audit logged")
                         
-                        # Log results
-                        components["audit_log"].log_generation_result(entry_id, results)
-                        
-                        # Enhanced success/failure feedback
-                        if not results:
-                            st.warning("⚠️ **Remote FIBO generation temporarily unavailable** - Your prompt and audit log are still recorded for future processing.")
-                            st.info("💡 This demonstrates the platform's audit capabilities even during service interruptions.")
-                        else:
-                            # Show completion with metrics
-                            st.success(f"🎉 **Generation completed successfully!** ⏱️ {generation_time:.1f}s | 🛡️ Fully compliant | 📊 Audit logged")
-                            
-                            # Display images in responsive columns
-                            if len(results) > 1:
-                                cols = st.columns(len(results))
-                                for idx, (col, result) in enumerate(zip(cols, results), start=1):
-                                    with col:
-                                        if "image" in result and result["image"]:
-                                            st.image(result["image"], use_column_width=True)
-                                            
-                                            # Enhanced caption with metadata
-                                            generation_timestamp = datetime.now().strftime("%H:%M:%S")
-                                            st.caption(f"🎯 **Variant {idx}** | 🕐 {generation_timestamp}")
-                                            
-                                            # Status indicator
-                                            if result.get("status") == "success":
-                                                st.markdown('<span class="status-pill status-success">✅ Compliant</span>', unsafe_allow_html=True)
-                                            elif result.get("status") == "safe_mode":
-                                                st.markdown('<span class="status-pill status-warning">⚡ Safe Mode Preview</span>', unsafe_allow_html=True)
-                                            else:
-                                                st.markdown('<span class="status-pill status-warning">Placeholder Mode</span>', unsafe_allow_html=True)
+                        # Display images in responsive columns
+                        if len(results) > 1:
+                            cols = st.columns(len(results))
+                            for idx, (col, result) in enumerate(zip(cols, results), start=1):
+                                with col:
+                                    if "image" in result and result["image"]:
+                                        st.image(result["image"], use_column_width=True)
+                                        
+                                        # Enhanced caption with metadata
+                                        generation_timestamp = datetime.now().strftime("%H:%M:%S")
+                                        st.caption(f"🎯 **Variant {idx}** | 🕐 {generation_timestamp}")
+                                        
+                                        # Status indicator
+                                        if result.get("status") == "success":
+                                            st.markdown('<span class="status-pill status-success">✅ Compliant</span>', unsafe_allow_html=True)
+                                        elif result.get("status") == "safe_mode":
+                                            st.markdown('<span class="status-pill status-warning">⚡ Safe Mode Preview</span>', unsafe_allow_html=True)
+                                        else:
+                                            st.markdown('<span class="status-pill status-warning">Placeholder Mode</span>', unsafe_allow_html=True)
                                             
                                             # Technical details in expander
                                             with st.expander(f"View Details"):
