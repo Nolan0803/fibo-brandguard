@@ -102,12 +102,38 @@ pip install -r requirements.txt
 echo "HF_TOKEN=your_token_here" > .env
 ```
 
-### Step 3: Launch
+### Step 3: Launch Locally
 ```bash
 streamlit run app.py
 ```
 
-Live Demo: [https://fibo-brandguard.streamlit.app](https://fibo-brandguard.streamlit.app)
+### Step 4: Deploy to Streamlit Cloud (Optional)
+
+**Live Demo**: [https://fibo-brandguard.streamlit.app](https://fibo-brandguard.streamlit.app)
+
+To deploy your own instance:
+
+1. **Fork this repository** to your GitHub account
+
+2. **Go to [Streamlit Cloud](https://share.streamlit.io/)** and sign in
+
+3. **Deploy with these settings**:
+   - Repository: `YourUsername/fibo-brandguard`
+   - Branch: `main`
+   - Main file path: `app.py`
+
+4. **Add your HuggingFace token to Secrets**:
+   - In Streamlit Cloud dashboard → Your app → Settings → Secrets
+   - Add:
+     ```toml
+     HF_TOKEN="hf_your_actual_token_here"
+     ```
+
+5. **Wait for deployment** (~2-3 minutes)
+   - Python 3.11 specified in `runtime.txt` for optimal compatibility
+   - All dependencies auto-installed from `requirements.txt`
+
+**Important**: Never commit your `.env` file to GitHub. Always use Streamlit Secrets for cloud deployment.
 
 ## 📈 **Proven Results & Metrics**
 
